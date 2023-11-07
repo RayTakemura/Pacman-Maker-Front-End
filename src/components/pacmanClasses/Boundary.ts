@@ -1,5 +1,5 @@
 export class Boundary {
-  position: Array<number>;
+  position: { x: number; y: number };
   width: number;
   height: number;
   c: CanvasRenderingContext2D | null;
@@ -7,7 +7,7 @@ export class Boundary {
     position,
     ctx,
   }: {
-    position: Array<number>;
+    position: { x: number; y: number };
     ctx: CanvasRenderingContext2D | null;
   }) {
     this.position = position;
@@ -15,5 +15,13 @@ export class Boundary {
     this.height = 40;
     this.c = ctx;
   }
-  draw() {}
+  draw() {
+    this!.c!.fillStyle = "blue";
+    this!.c!.fillRect(
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height,
+    );
+  }
 }

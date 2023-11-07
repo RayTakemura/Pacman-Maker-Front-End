@@ -5,19 +5,43 @@ const PacmanCanvas: React.FC = () => {
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   function startGame() {
     console.log("startGame started");
-    const b = new Boundary();
-    console.log(b.sayHello());
+    const map = [
+      ["-", "-", "-", "-", "-", "-"],
+      ["-", " ", " ", " ", " ", "-"],
+      ["-", " ", " ", " ", " ", "-"],
+      ["-", "-", "-", "-", "-", "-"],
+    ];
+    // const boundaries = Array<Boundary>;
+    const boundaries = Array<Boundary>;
+    map.forEach((row, i) => {
+      row.forEach((symbol, j) => {
+        switch (symbol) {
+          case "-":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: 0 * j,
+                  y: 0 * i,
+                },
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+        }
+      });
+    });
+    boundaries.forEach((boundary: Boundary) => {
+      boundary.draw();
+    });
   }
   useEffect(() => {
     // initiallize
     if (canvasRef.current) {
       const can = canvasRef.current;
-      console.log(can);
       can!.height = innerHeight;
       can!.width = innerWidth;
       canvasCtxRef.current = can.getContext("2d");
-      const ctx = canvasCtxRef.current;
-      console.log(ctx);
+      // const ctx = canvasCtxRef.current;
       startGame();
     }
   });

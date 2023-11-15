@@ -66,10 +66,21 @@ const PacmanCanvas: React.FC = () => {
       ctx?.clearRect(0, 0, canvas?.width ?? 0, canvas?.height ?? 0);
       boundaries.forEach((boundary: Boundary) => {
         boundary.draw();
+        if (
+          (player.position.y - player.radius + player.velocity.y <= boundary.position.y + boundary.height) &&
+          (player.position.x + player.radius + player.velocity.x <= boundary.position.x) &&
+          (player.position.y + player.radius + player.velocity.y <= boundary.position.y) &&
+          (player.position.x - player.radius + player.velocity.x <= boundary.position.x + boundary.width)
+        ){
+        player!.velocity!.x = 0;
+        player!.velocity!.y = 0;
+
+        }
+
       });
       player.update();
-      player!.velocity!.x = 0;
-      player!.velocity!.y = 0;
+      // player!.velocity!.x = 0;
+      // player!.velocity!.y = 0;
 
       if (keys.w.pressed && lastKey === "w") {
         player!.velocity!.y = -5;
@@ -103,24 +114,6 @@ const PacmanCanvas: React.FC = () => {
           break;
       }
     });
-    // switch (key) {
-    //   case "w":
-    //     player!.velocity.y = -2.5;
-    //     player!.velocity.x = 0;
-    //     break;
-    //   case "a":
-    //     player!.velocity!.x = -2.5;
-    //     player!.velocity!.y = 0;
-    //     break;
-    //   case "s":
-    //     player!.velocity!.y = 2.5;
-    //     player!.velocity!.x = 0;
-    //     break;
-    //   case "d":
-    //     player!.velocity!.x = 2.5;
-    //     player!.velocity!.y = 0;
-    //     break;
-    // }
     addEventListener("keyup", ({ key }) => {
       console.log("keyup", key);
       switch (key) {

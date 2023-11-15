@@ -1,4 +1,6 @@
 export class Boundary {
+  static width = 40;
+  static height = 40;
   position: { x: number; y: number };
   width: number;
   height: number;

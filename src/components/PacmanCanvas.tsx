@@ -7,11 +7,11 @@ const PacmanCanvas: React.FC = () => {
   function startGame() {
     console.log("beginning startGame");
     const map = [
-      ["-", "-", "-", "-", "-", "-"],
-      ["-", " ", " ", " ", " ", "-"],
-      ["-", " ", "-", "-", " ", "-"],
-      ["-", " ", " ", " ", " ", "-"],
-      ["-", "-", "-", "-", "-", "-"],
+      ["-", "-", "-", "-", "-", "-", "-"],
+      ["-", " ", " ", " ", " ", " ", "-"],
+      ["-", " ", "-", " ", "-", " ", "-"],
+      ["-", " ", " ", " ", " ", " ", "-"],
+      ["-", "-", "-", "-", "-", "-", "-"],
     ];
     const boundaries = Array<Boundary>();
     const player = new Player({
@@ -58,31 +58,50 @@ const PacmanCanvas: React.FC = () => {
         pressed: false,
       },
     };
-
+    function circleCollidesWithRectangle({
+      circle,
+      rectangle,
+    }: {
+      circle: Player;
+      rectangle: Boundary;
+    }) {
+      return (
+        circle.position.y - circle.radius + circle.velocity.y <=
+          rectangle.position.y + rectangle.height &&
+        circle.position.x + circle.radius + circle.velocity.x >=
+          rectangle.position.x &&
+        circle.position.y + circle.radius + circle.velocity.y >=
+          rectangle.position.y &&
+        circle.position.x - circle.radius + circle.velocity.x <=
+          rectangle.position.x + rectangle.width
+      );
+    }
     function animate() {
       requestAnimationFrame(animate);
       const ctx = canvasCtxRef.current;
       const canvas = canvasRef.current;
       ctx?.clearRect(0, 0, canvas?.width ?? 0, canvas?.height ?? 0);
-      boundaries.forEach((boundary: Boundary) => {
-        boundary.draw();
-        if (
-          (player.position.y - player.radius + player.velocity.y <= boundary.position.y + boundary.height) &&
-          (player.position.x + player.radius + player.velocity.x <= boundary.position.x) &&
-          (player.position.y + player.radius + player.velocity.y <= boundary.position.y) &&
-          (player.position.x - player.radius + player.velocity.x <= boundary.position.x + boundary.width)
-        ){
-        player!.velocity!.x = 0;
-        player!.velocity!.y = 0;
-
-        }
-
-      });
-      player.update();
-      // player!.velocity!.x = 0;
-      // player!.velocity!.y = 0;
-
       if (keys.w.pressed && lastKey === "w") {
+        for (let i = 0; i < boundaries.length; i++) {
+          const boundary = boundaries[i];
+          // const playerTemp = Object.create(player);
+          // const playerTemp = JSON.parse(JSON.stringify(player));
+          const playerTemp = Object.assign({}, player);
+          console.log(player, playerTemp);
+          playerTemp!.velocity = { x: 0, y: -5 };
+          console.log(playerTemp);
+          if (
+            circleCollidesWithRectangle({
+              circle: playerTemp,
+              rectangle: boundary,
+            })
+          ) {
+            player!.velocity!.y = 0;
+            break;
+          } else {
+            player!.velocity!.y = -5;
+          }
+        }
         player!.velocity!.y = -5;
       } else if (keys.a.pressed && lastKey === "a") {
         player!.velocity!.x = -5;
@@ -91,6 +110,18 @@ const PacmanCanvas: React.FC = () => {
       } else if (keys.d.pressed && lastKey === "d") {
         player!.velocity!.x = 5;
       }
+      boundaries.forEach((boundary: Boundary) => {
+        boundary.draw();
+        if (
+          circleCollidesWithRectangle({ circle: player, rectangle: boundary })
+        ) {
+          player!.velocity!.x = 0;
+          player!.velocity!.y = 0;
+        }
+      });
+      player.update();
+      // player!.velocity!.x = 0;
+      // player!.velocity!.y = 0;
     }
     animate();
     addEventListener("keydown", ({ key }) => {

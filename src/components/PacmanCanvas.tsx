@@ -65,6 +65,11 @@ const PacmanCanvas: React.FC = () => {
       circle: Player;
       rectangle: Boundary;
     }) {
+      console.log(
+        "first",
+        circle.position.y - circle.radius + circle.velocity.y <=
+          rectangle.position.y + rectangle.height,
+      );
       return (
         circle.position.y - circle.radius + circle.velocity.y <=
           rectangle.position.y + rectangle.height &&
@@ -84,25 +89,34 @@ const PacmanCanvas: React.FC = () => {
       if (keys.w.pressed && lastKey === "w") {
         for (let i = 0; i < boundaries.length; i++) {
           const boundary = boundaries[i];
-          // const playerTemp = Object.create(player);
-          // const playerTemp = JSON.parse(JSON.stringify(player));
-          const playerTemp = Object.assign({}, player);
-          console.log(player, playerTemp);
-          playerTemp!.velocity = { x: 0, y: -5 };
-          console.log(playerTemp);
+          console.log(
+            "circleCollidesWithRectangle",
+            circleCollidesWithRectangle({
+              circle: new Player({
+                position: player.position,
+                velocity: { x: 0, y: -5 },
+                ctx: canvasCtxRef.current,
+              }),
+              rectangle: boundary,
+            }),
+          );
           if (
             circleCollidesWithRectangle({
-              circle: playerTemp,
+              circle: new Player({
+                position: player.position,
+                velocity: { x: 0, y: -5 },
+                ctx: canvasCtxRef.current,
+              }),
               rectangle: boundary,
             })
           ) {
+            console.log("found no boundary!");
             player!.velocity!.y = 0;
             break;
           } else {
             player!.velocity!.y = -5;
           }
         }
-        player!.velocity!.y = -5;
       } else if (keys.a.pressed && lastKey === "a") {
         player!.velocity!.x = -5;
       } else if (keys.s.pressed && lastKey === "s") {

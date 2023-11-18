@@ -11,6 +11,8 @@ const PacmanCanvas: React.FC = () => {
       ["-", " ", " ", " ", " ", " ", "-"],
       ["-", " ", "-", " ", "-", " ", "-"],
       ["-", " ", " ", " ", " ", " ", "-"],
+      ["-", " ", "-", " ", "-", " ", "-"],
+      ["-", " ", " ", " ", " ", " ", "-"],
       ["-", "-", "-", "-", "-", "-", "-"],
     ];
     const boundaries = Array<Boundary>();
@@ -65,11 +67,6 @@ const PacmanCanvas: React.FC = () => {
       circle: Player;
       rectangle: Boundary;
     }) {
-      console.log(
-        "first",
-        circle.position.y - circle.radius + circle.velocity.y <=
-          rectangle.position.y + rectangle.height,
-      );
       return (
         circle.position.y - circle.radius + circle.velocity.y <=
           rectangle.position.y + rectangle.height &&
@@ -89,28 +86,17 @@ const PacmanCanvas: React.FC = () => {
       if (keys.w.pressed && lastKey === "w") {
         for (let i = 0; i < boundaries.length; i++) {
           const boundary = boundaries[i];
-          console.log(
-            "circleCollidesWithRectangle",
-            circleCollidesWithRectangle({
-              circle: new Player({
-                position: player.position,
-                velocity: { x: 0, y: -5 },
-                ctx: canvasCtxRef.current,
-              }),
-              rectangle: boundary,
-            }),
-          );
+          const tempPlayer = new Player({
+            position: player.position,
+            velocity: { x: 0, y: -5 },
+            ctx: canvasCtxRef.current,
+          })         
           if (
             circleCollidesWithRectangle({
-              circle: new Player({
-                position: player.position,
-                velocity: { x: 0, y: -5 },
-                ctx: canvasCtxRef.current,
-              }),
+              circle: tempPlayer,
               rectangle: boundary,
             })
           ) {
-            console.log("found no boundary!");
             player!.velocity!.y = 0;
             break;
           } else {
@@ -118,11 +104,65 @@ const PacmanCanvas: React.FC = () => {
           }
         }
       } else if (keys.a.pressed && lastKey === "a") {
-        player!.velocity!.x = -5;
+        for (let i = 0; i < boundaries.length; i++) {
+          const boundary = boundaries[i];
+          const tempPlayer = new Player({
+            position: player.position,
+            velocity: { x: -5, y: 0 },
+            ctx: canvasCtxRef.current,
+          })         
+          if (
+            circleCollidesWithRectangle({
+              circle: tempPlayer,
+              rectangle: boundary,
+            })
+          ) {
+            player!.velocity!.x = 0;
+            break;
+          } else {
+            player!.velocity!.x = -5;
+          }
+        }
       } else if (keys.s.pressed && lastKey === "s") {
-        player!.velocity!.y = 5;
+        for (let i = 0; i < boundaries.length; i++) {
+          const boundary = boundaries[i];
+          const tempPlayer = new Player({
+            position: player.position,
+            velocity: { x: 0, y: 5 },
+            ctx: canvasCtxRef.current,
+          })         
+          if (
+            circleCollidesWithRectangle({
+              circle: tempPlayer,
+              rectangle: boundary,
+            })
+          ) {
+            player!.velocity!.y = 0;
+            break;
+          } else {
+            player!.velocity!.y = 5;
+          }
+        }
       } else if (keys.d.pressed && lastKey === "d") {
-        player!.velocity!.x = 5;
+        for (let i = 0; i < boundaries.length; i++) {
+          const boundary = boundaries[i];
+          const tempPlayer = new Player({
+            position: player.position,
+            velocity: { x: 5, y: 0 },
+            ctx: canvasCtxRef.current,
+          })         
+          if (
+            circleCollidesWithRectangle({
+              circle: tempPlayer,
+              rectangle: boundary,
+            })
+          ) {
+            player!.velocity!.x = 0;
+            break;
+          } else {
+            player!.velocity!.x = 5;
+          }
+        }
       }
       boundaries.forEach((boundary: Boundary) => {
         boundary.draw();

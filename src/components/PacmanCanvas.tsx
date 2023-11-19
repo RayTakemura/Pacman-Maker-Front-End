@@ -7,13 +7,19 @@ const PacmanCanvas: React.FC = () => {
   function startGame() {
     console.log("beginning startGame");
     const map = [
-      ["-", "-", "-", "-", "-", "-", "-"],
-      ["-", " ", " ", " ", " ", " ", "-"],
-      ["-", " ", "-", " ", "-", " ", "-"],
-      ["-", " ", " ", " ", " ", " ", "-"],
-      ["-", " ", "-", " ", "-", " ", "-"],
-      ["-", " ", " ", " ", " ", " ", "-"],
-      ["-", "-", "-", "-", "-", "-", "-"],
+      ["1", "-", "-", "-", "-", "-", "-", "-", "-", "-", "2"],
+      ["|", ".", ".", ".", ".", ".", ".", ".", ".", ".", "|"],
+      ["|", ".", "b", ".", "[", "7", "]", ".", "b", ".", "|"],
+      ["|", ".", ".", ".", ".", "_", ".", ".", ".", ".", "|"],
+      ["|", ".", "[", "]", ".", ".", ".", "[", "]", ".", "|"],
+      ["|", ".", ".", ".", ".", "^", ".", ".", ".", ".", "|"],
+      ["|", ".", "b", ".", "[", "+", "]", ".", "b", ".", "|"],
+      ["|", ".", ".", ".", ".", "_", ".", ".", ".", ".", "|"],
+      ["|", ".", "[", "]", ".", ".", ".", "[", "]", ".", "|"],
+      ["|", ".", ".", ".", ".", "^", ".", ".", ".", ".", "|"],
+      ["|", ".", "b", ".", "[", "5", "]", ".", "b", ".", "|"],
+      ["|", ".", ".", ".", ".", ".", ".", ".", ".", "p", "|"],
+      ["3", "-", "-", "-", "-", "-", "-", "-", "-", "-", "4"],
     ];
     const boundaries = Array<Boundary>();
     const player = new Player({
@@ -27,7 +33,12 @@ const PacmanCanvas: React.FC = () => {
       },
       ctx: canvasCtxRef.current,
     });
-    console.log(player);
+    function createImage(src: string) {
+      const image = new Image();
+      image.src = src;
+      return image;
+    }
+
     map.forEach((row, i) => {
       row.forEach((symbol, j) => {
         switch (symbol) {
@@ -38,9 +49,194 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
+                image: createImage("./../../public/img/pipeHorizontal.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
+            break;
+          case "|":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/pipeVertical.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "1":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/pipeCorner1.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "2":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/pipeCorner2.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "3":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/pipeCorner3.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "4":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/pipeCorner4.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "b":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/block.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "[":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/capLeft.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "]":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/capRight.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "_":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/capBottom.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "^":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/capTop.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "+":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/pipeCross.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "5":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/pipeConnectorTop.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "6":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/pipeConnectorRight.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "7":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage(
+                  "./../../public/img/pipeConnectorBottom.png",
+                ),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "8":
+            boundaries.push(
+              new Boundary({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("./../../public/img/pipeConnectorLeft.png"),
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case ".":
             break;
         }
       });
@@ -90,7 +286,7 @@ const PacmanCanvas: React.FC = () => {
             position: player.position,
             velocity: { x: 0, y: -5 },
             ctx: canvasCtxRef.current,
-          })         
+          });
           if (
             circleCollidesWithRectangle({
               circle: tempPlayer,
@@ -110,7 +306,7 @@ const PacmanCanvas: React.FC = () => {
             position: player.position,
             velocity: { x: -5, y: 0 },
             ctx: canvasCtxRef.current,
-          })         
+          });
           if (
             circleCollidesWithRectangle({
               circle: tempPlayer,
@@ -130,7 +326,7 @@ const PacmanCanvas: React.FC = () => {
             position: player.position,
             velocity: { x: 0, y: 5 },
             ctx: canvasCtxRef.current,
-          })         
+          });
           if (
             circleCollidesWithRectangle({
               circle: tempPlayer,
@@ -150,7 +346,7 @@ const PacmanCanvas: React.FC = () => {
             position: player.position,
             velocity: { x: 5, y: 0 },
             ctx: canvasCtxRef.current,
-          })         
+          });
           if (
             circleCollidesWithRectangle({
               circle: tempPlayer,

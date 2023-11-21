@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 // import { Boundary } from "./pacmanClasses/Boundary";
-import { Boundary, Player } from "./pacmanClasses/index";
+import { Boundary, Player, Pellet } from "./pacmanClasses/index";
 const PacmanCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
@@ -22,6 +22,7 @@ const PacmanCanvas: React.FC = () => {
       ["3", "-", "-", "-", "-", "-", "-", "-", "-", "-", "4"],
     ];
     const boundaries = Array<Boundary>();
+    const pellets = Array<Pellet>();
     const player = new Player({
       position: {
         x: Boundary.width + Boundary.width / 2,
@@ -49,7 +50,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeHorizontal.png"),
+                image: createImage("/img/pipeHorizontal.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -61,7 +62,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeVertical.png"),
+                image: createImage("/img/pipeVertical.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -73,7 +74,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeCorner1.png"),
+                image: createImage("/img/pipeCorner1.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -85,7 +86,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeCorner2.png"),
+                image: createImage("/img/pipeCorner2.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -97,7 +98,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeCorner3.png"),
+                image: createImage("/img/pipeCorner3.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -109,7 +110,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeCorner4.png"),
+                image: createImage("/img/pipeCorner4.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -121,7 +122,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/block.png"),
+                image: createImage("/img/block.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -133,7 +134,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/capLeft.png"),
+                image: createImage("/img/capLeft.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -145,7 +146,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/capRight.png"),
+                image: createImage("/img/capRight.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -157,7 +158,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/capBottom.png"),
+                image: createImage("/img/capBottom.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -169,7 +170,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/capTop.png"),
+                image: createImage("/img/capTop.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -181,7 +182,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeCross.png"),
+                image: createImage("/img/pipeCross.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -193,7 +194,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeConnectorTop.png"),
+                image: createImage("/img/pipeConnectorTop.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -205,7 +206,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeConnectorRight.png"),
+                image: createImage("/img/pipeConnectorRight.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -217,9 +218,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage(
-                  "./../../public/img/pipeConnectorBottom.png",
-                ),
+                image: createImage("/img/pipeConnectorBottom.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -231,12 +230,21 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("./../../public/img/pipeConnectorLeft.png"),
+                image: createImage("/img/pipeConnectorLeft.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
             break;
           case ".":
+            pellets.push(
+              new Pellet({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                ctx: canvasCtxRef.current,
+              }),
+            );
             break;
         }
       });

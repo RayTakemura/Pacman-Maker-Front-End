@@ -230,7 +230,7 @@ const PacmanCanvas: React.FC = () => {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
                 },
-                image: createImage("/img/pipeConnectorLeft.png"),
+                image: createImage("./../../public/img/pipeConnectorLeft.png"),
                 ctx: canvasCtxRef.current,
               }),
             );
@@ -239,8 +239,8 @@ const PacmanCanvas: React.FC = () => {
             pellets.push(
               new Pellet({
                 position: {
-                  x: Boundary.width * j,
-                  y: Boundary.height * i,
+                  x: Boundary.width * j + Boundary.width / 2,
+                  y: Boundary.height * i + Boundary.height / 2,
                 },
                 ctx: canvasCtxRef.current,
               }),
@@ -368,6 +368,9 @@ const PacmanCanvas: React.FC = () => {
           }
         }
       }
+      pellets.forEach((pellet) => {
+        pellet.draw();
+      });
       boundaries.forEach((boundary: Boundary) => {
         boundary.draw();
         if (

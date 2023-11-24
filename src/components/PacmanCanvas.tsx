@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 // import { Boundary } from "./pacmanClasses/Boundary";
 import { Boundary, Player, Pellet } from "./pacmanClasses/index";
+import InGameScore from "./InGameScore";
 const PacmanCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
@@ -448,6 +449,11 @@ const PacmanCanvas: React.FC = () => {
       console.log("after startGame()");
     }
   }, []);
-  return <canvas className="game" ref={canvasRef}></canvas>;
+  return (
+    <>
+      <InGameScore />
+      <canvas className="game" ref={canvasRef}></canvas>;
+    </>
+  );
 };
 export default PacmanCanvas;

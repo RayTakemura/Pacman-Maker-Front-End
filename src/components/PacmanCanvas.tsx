@@ -321,7 +321,7 @@ const PacmanCanvas: React.FC = () => {
       circle,
       rectangle,
     }: {
-      circle: Player;
+      circle: Player | Ghost;
       rectangle: Boundary;
     }) {
       const padding = Boundary.width / 2 - circle.radius - 1;

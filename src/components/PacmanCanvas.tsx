@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 // import { Boundary } from "./pacmanClasses/Boundary";
-import { Boundary, Player, Pellet, Ghost } from "./pacmanClasses/index";
+import {
+  Boundary,
+  Player,
+  Pellet,
+  Ghost,
+  PowerUp,
+} from "./pacmanClasses/index";
 import InGameScore from "./InGameScore";
 const PacmanCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -33,6 +39,7 @@ const PacmanCanvas: React.FC = () => {
     ];
     const boundaries = Array<Boundary>();
     const pellets = Array<Pellet>();
+    const powerUps = Array<PowerUp>();
     const ghosts = Array<Ghost>();
     ghosts.push(
       new Ghost({
@@ -280,6 +287,17 @@ const PacmanCanvas: React.FC = () => {
               }),
             );
             break;
+          case "p":
+            powerUps.push(
+              new PowerUp({
+                position: {
+                  x: Boundary.width * j + Boundary.width / 2,
+                  y: Boundary.height * i + Boundary.height / 2,
+                },
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
         }
       });
     });
@@ -406,6 +424,50 @@ const PacmanCanvas: React.FC = () => {
           }
         }
       }
+      for (let i = powerUps.length - 1; i >= 0; i--) {
+        const powerUp = powerUps[i];
+        powerUp.draw();
+        if (
+          Math.hypot(
+            powerUp.position.x - player.position.x,
+            powerUp.position.y - player.position.y,
+          ) <
+          powerUp.radius + player.radius
+        ) {
+          console.log("touching");
+          powerUps.splice(i, 1);
+          ghosts.forEach((ghost) => {
+            ghost.scared = true;
+            setTimeout(() => {
+              ghost.scared = false;
+            }, 5000);
+          });
+        }
+      }
+      for (let i = ghosts.length - 1; i >= 0; i--) {
+        const ghost = ghosts[i];
+        if (
+          Math.hypot(
+            ghost.position.x - player.position.x,
+            ghost.position.y - player.position.y,
+          ) <
+          ghost.radius + player.radius
+        ) {
+          if (ghost.scared) {
+            ghosts.splice(i, 1);
+          } else {
+            cancelAnimationFrame(animationId);
+            console.log("you lose");
+          }
+        }
+      }
+
+      // win condition
+      if (pellets.length === 0) {
+        cancelAnimationFrame(animationId);
+        console.log("you win!");
+      }
+
       for (let i = pellets.length - 1; i >= 0; i--) {
         const pellet = pellets[i];
         // pellets.forEach((pellet, i) => {
@@ -434,16 +496,6 @@ const PacmanCanvas: React.FC = () => {
       player.update();
       ghosts.forEach((ghost) => {
         ghost.update();
-        if (
-          Math.hypot(
-            ghost.position.x - player.position.x,
-            ghost.position.y - player.position.y,
-          ) <
-          ghost.radius + player.radius
-        ) {
-          cancelAnimationFrame(animationId);
-          console.log("you lose");
-        }
         const collisions = Array<string>();
         boundaries.forEach((boundary: Boundary) => {
           boundary.draw();
@@ -533,7 +585,12 @@ const PacmanCanvas: React.FC = () => {
           ghost.prevCollisions = Array<string>();
         }
       });
-    }
+      if (player.velocity.x > 0) player.rotation = 0;
+      else if (player.velocity.x < 0) player.rotation = Math.PI;
+      else if (player.velocity.y > 0) player.rotation = Math.PI / 2;
+      else if (player.velocity.y < 0) player.rotation = Math.PI * 1.5;
+    } // end of animate
+
     animate();
     addEventListener("keydown", ({ key }) => {
       console.log("keydown", key);

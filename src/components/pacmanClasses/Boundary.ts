@@ -1,6 +1,6 @@
 export class Boundary {
-  static width = 40;
-  static height = 40;
+  static width = 10;
+  static height = 10;
   position: { x: number; y: number };
   width: number;
   height: number;
@@ -16,19 +16,19 @@ export class Boundary {
     ctx: CanvasRenderingContext2D | null;
   }) {
     this.position = position;
-    this.width = 40;
-    this.height = 40;
+    this.width = 10;
+    this.height = 10;
     this.image = image;
     this.c = ctx;
   }
   draw() {
-    // this!.c!.fillStyle = "blue";
-    // this!.c!.fillRect(
-    //   this.position.x,
-    //   this.position.y,
-    //   this.width,
-    //   this.height,
-    // );
-    this.c!.drawImage(this.image, this.position.x, this.position.y);
+    this!.c!.fillStyle = "blue";
+    this!.c!.fillRect(
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height,
+    );
+    // this.c!.drawImage(this.image, this.position.x, this.position.y);
   }
 }

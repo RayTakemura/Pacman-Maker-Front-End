@@ -1,10 +1,19 @@
-import React, { useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 // import { Boundary } from "./pacmanClasses/Boundary";
 import { Boundary, Player, Pellet } from "./pacmanClasses/index";
 import InGameScore from "./InGameScore";
 const PacmanCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
+  const [score, setScore] = useState<number>(0);
+  function addScore(): void {
+    console.log("addScore", score);
+    // setScore(score + 10);
+    setScore((prevScore) => {
+      console.log("addScore", prevScore);
+      return prevScore + 10;
+    });
+  }
   function startGame() {
     console.log("beginning startGame");
     const map = [
@@ -251,6 +260,7 @@ const PacmanCanvas: React.FC = () => {
       });
     });
     let lastKey = "";
+
     const keys = {
       w: {
         pressed: false,
@@ -382,6 +392,7 @@ const PacmanCanvas: React.FC = () => {
         ) {
           console.log("touching");
           pellets.splice(i, 1);
+          addScore();
         }
       }
       boundaries.forEach((boundary: Boundary) => {
@@ -451,7 +462,7 @@ const PacmanCanvas: React.FC = () => {
   }, []);
   return (
     <>
-      <InGameScore />
+      <InGameScore score={score} />
       <canvas className="game" ref={canvasRef}></canvas>;
     </>
   );

@@ -1,8 +1,11 @@
-function InGameScore() {
+type Props = {
+  score: number;
+};
+function InGameScore({ score }: Props) {
   return (
     <>
       <p>
-        <span>Score: </span> <span>0</span>
+        <span>Score: </span> <span>{score}</span>
       </p>
     </>
   );

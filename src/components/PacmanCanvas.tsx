@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 // import { Boundary } from "./pacmanClasses/Boundary";
-import { Boundary, Player, Pellet } from "./pacmanClasses/index";
+import { Boundary, Player, Pellet, Ghost } from "./pacmanClasses/index";
 import InGameScore from "./InGameScore";
 const PacmanCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -33,6 +33,30 @@ const PacmanCanvas: React.FC = () => {
     ];
     const boundaries = Array<Boundary>();
     const pellets = Array<Pellet>();
+    const ghosts = Array<Ghost>();
+    ghosts.push(
+      new Ghost({
+        position: {
+          x: Boundary.width * 6 + Boundary.width / 2,
+          y: Boundary.height + Boundary.height / 2,
+        },
+        velocity: { x: Ghost.speed, y: 0 },
+        color: "red",
+        ctx: canvasCtxRef.current,
+      }),
+      new Ghost({
+        position: {
+          x: Boundary.width * 6 + Boundary.width / 2,
+          y: Boundary.height * 3 + Boundary.height / 2,
+        },
+        velocity: {
+          x: Ghost.speed,
+          y: 0,
+        },
+        color: "pink",
+        ctx: canvasCtxRef.current,
+      }),
+    );
     const player = new Player({
       position: {
         x: Boundary.width + Boundary.width / 2,
@@ -282,19 +306,22 @@ const PacmanCanvas: React.FC = () => {
       circle: Player;
       rectangle: Boundary;
     }) {
+      const padding = Boundary.width / 2 - circle.radius - 1;
       return (
         circle.position.y - circle.radius + circle.velocity.y <=
-          rectangle.position.y + rectangle.height &&
+          rectangle.position.y + rectangle.height + padding &&
         circle.position.x + circle.radius + circle.velocity.x >=
-          rectangle.position.x &&
+          rectangle.position.x - padding &&
         circle.position.y + circle.radius + circle.velocity.y >=
-          rectangle.position.y &&
+          rectangle.position.y - padding &&
         circle.position.x - circle.radius + circle.velocity.x <=
-          rectangle.position.x + rectangle.width
+          rectangle.position.x + rectangle.width + padding
       );
     }
+    let animationId: number;
     function animate() {
-      requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
+      console.log(animationId);
       const ctx = canvasCtxRef.current;
       const canvas = canvasRef.current;
       ctx?.clearRect(0, 0, canvas?.width ?? 0, canvas?.height ?? 0);
@@ -405,8 +432,107 @@ const PacmanCanvas: React.FC = () => {
         }
       });
       player.update();
-      // player!.velocity!.x = 0;
-      // player!.velocity!.y = 0;
+      ghosts.forEach((ghost) => {
+        ghost.update();
+        if (
+          Math.hypot(
+            ghost.position.x - player.position.x,
+            ghost.position.y - player.position.y,
+          ) <
+          ghost.radius + player.radius
+        ) {
+          cancelAnimationFrame(animationId);
+          console.log("you lose");
+        }
+        const collisions = Array<string>();
+        boundaries.forEach((boundary: Boundary) => {
+          boundary.draw();
+          const tempGhost = new Ghost({
+            position: ghost.position,
+            velocity: { x: Ghost.speed, y: 0 },
+            color: ghost.color,
+            ctx: canvasCtxRef.current,
+          });
+          if (
+            !collisions.includes("right") &&
+            circleCollidesWithRectangle({
+              circle: tempGhost,
+              rectangle: boundary,
+            })
+          ) {
+            collisions.push("right");
+          }
+          tempGhost.velocity = { x: -Ghost.speed, y: 0 };
+          if (
+            !collisions.includes("left") &&
+            circleCollidesWithRectangle({
+              circle: tempGhost,
+              rectangle: boundary,
+            })
+          ) {
+            collisions.push("left");
+          }
+          tempGhost.velocity = { x: 0, y: -Ghost.speed };
+          if (
+            !collisions.includes("up") &&
+            circleCollidesWithRectangle({
+              circle: tempGhost,
+              rectangle: boundary,
+            })
+          ) {
+            collisions.push("up");
+          }
+          tempGhost.velocity = { x: 0, y: Ghost.speed };
+          if (
+            !collisions.includes("down") &&
+            circleCollidesWithRectangle({
+              circle: tempGhost,
+              rectangle: boundary,
+            })
+          ) {
+            collisions.push("down");
+          }
+        });
+        if (collisions.length > ghost.prevCollisions.length) {
+          ghost.prevCollisions = collisions;
+        }
+        if (
+          JSON.stringify(collisions) !== JSON.stringify(ghost.prevCollisions)
+        ) {
+          if (ghost.velocity.x > 0) ghost.prevCollisions.push("right");
+          if (ghost.velocity.x < 0) ghost.prevCollisions.push("left");
+          if (ghost.velocity.y > 0) ghost.prevCollisions.push("down");
+          if (ghost.velocity.y < 0) ghost.prevCollisions.push("up");
+          console.log(collisions);
+          console.log(ghost.prevCollisions);
+          const pathways = ghost.prevCollisions.filter((collision) => {
+            return !collisions.includes(collision);
+          });
+          console.log({ pathways });
+          const direction =
+            pathways[Math.floor(Math.random() * pathways.length)]; //TODO: find a way to target the player instead of complete random
+          console.log(direction);
+          switch (direction) {
+            case "down":
+              ghost.velocity.y = Ghost.speed;
+              ghost.velocity.x = 0;
+              break;
+            case "up":
+              ghost.velocity.y = -Ghost.speed;
+              ghost.velocity.x = 0;
+              break;
+            case "left":
+              ghost.velocity.y = 0;
+              ghost.velocity.x = -Ghost.speed;
+              break;
+            case "right":
+              ghost.velocity.y = 0;
+              ghost.velocity.x = Ghost.speed;
+              break;
+          }
+          ghost.prevCollisions = Array<string>();
+        }
+      });
     }
     animate();
     addEventListener("keydown", ({ key }) => {

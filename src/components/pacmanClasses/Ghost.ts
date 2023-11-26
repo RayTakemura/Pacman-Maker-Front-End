@@ -3,6 +3,8 @@ export class Ghost {
   velocity: { x: number; y: number };
   color: string;
   radius: number;
+  prevCollisions = Array<string>();
+  static speed = 2;
   c: CanvasRenderingContext2D | null;
 
   constructor({
@@ -20,6 +22,8 @@ export class Ghost {
     this.velocity = velocity;
     this.color = color;
     this.radius = 15;
+    this.prevCollisions = Array<string>();
+    this.speed = 2;
     this.c = ctx;
   }
 

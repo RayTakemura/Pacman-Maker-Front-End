@@ -5,6 +5,7 @@ import {
   Pellet,
   Ghost,
   PowerUp,
+  GhostSpawn,
 } from "./pacmanClasses/index";
 import InGameScore from "./InGameScore";
 const PacmanCanvas: React.FC = () => {
@@ -23,24 +24,25 @@ const PacmanCanvas: React.FC = () => {
     console.log("beginning startGame");
     const map = [
       ["1", "-", "-", "-", "-", "-", "-", "-", "-", "-", "2"],
-      ["|", ".", ".", ".", ".", ".", ".", ".", ".", ".", "|"],
+      ["|", "p", ".", ".", ".", ".", ".", ".", ".", "p", "|"],
       ["|", ".", "b", ".", "[", "7", "]", ".", "b", ".", "|"],
       ["|", ".", ".", ".", ".", "|", ".", ".", ".", ".", "|"],
       ["|", ".", "[", "]", ".", "_", ".", "[", "]", ".", "|"],
       ["|", ".", ".", ".", ".", ".", ".", ".", ".", ".", "|"],
       ["|", ".", "^", ".", "i", "j", "k", ".", "^", ".", "|"],
       ["|", ".", "_", ".", "l", "m", "n", ".", "_", ".", "|"],
-      ["|", ".", ".", ".", ".", ".", ".", ".", ".", ".", "|"],
+      ["|", ".", ".", ".", ".", " ", ".", ".", ".", ".", "|"],
       ["|", ".", "1", "]", ".", "^", ".", "[", "2", ".", "|"],
       ["|", ".", "|", ".", ".", "|", ".", ".", "|", ".", "|"],
       ["|", ".", "_", ".", "[", "5", "]", ".", "_", ".", "|"],
-      ["|", ".", ".", ".", ".", ".", ".", ".", ".", "p", "|"],
+      ["|", "p", ".", ".", ".", ".", ".", ".", ".", "p", "|"],
       ["3", "-", "-", "-", "-", "-", "-", "-", "-", "-", "4"],
     ];
     const boundaries = Array<Boundary>();
     const pellets = Array<Pellet>();
     const powerUps = Array<PowerUp>();
     const ghosts = Array<Ghost>();
+    const ghostSpawns = Array<GhostSpawn>();
     ghosts.push(
       new Ghost({
         position: {
@@ -66,8 +68,8 @@ const PacmanCanvas: React.FC = () => {
     );
     const player = new Player({
       position: {
-        x: Boundary.width + Boundary.width / 2,
-        y: Boundary.height + Boundary.height / 2,
+        x: Boundary.width * 5 + Boundary.width / 2,
+        y: Boundary.height * 8 + Boundary.height / 2,
       },
       velocity: {
         x: 0,
@@ -298,6 +300,84 @@ const PacmanCanvas: React.FC = () => {
               }),
             );
             break;
+          case "i":
+            ghostSpawns.push(
+              new GhostSpawn({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("/img/spawn-i.svg"),
+                pattern: "i",
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "j":
+            ghostSpawns.push(
+              new GhostSpawn({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("/img/spawn-j.svg"),
+                pattern: "j",
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "k":
+            ghostSpawns.push(
+              new GhostSpawn({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("/img/spawn-k.svg"),
+                pattern: "k",
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "l":
+            ghostSpawns.push(
+              new GhostSpawn({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("/img/spawn-l.svg"),
+                pattern: "l",
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "m":
+            ghostSpawns.push(
+              new GhostSpawn({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("/img/spawn-m.svg"),
+                pattern: "m",
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
+          case "n":
+            ghostSpawns.push(
+              new GhostSpawn({
+                position: {
+                  x: Boundary.width * j,
+                  y: Boundary.height * i,
+                },
+                image: createImage("/img/spawn-n.svg"),
+                pattern: "n",
+                ctx: canvasCtxRef.current,
+              }),
+            );
+            break;
         }
       });
     });
@@ -444,6 +524,22 @@ const PacmanCanvas: React.FC = () => {
           });
         }
       }
+      for (let i = ghostSpawns.length - 1; i >= 0; i--) {
+        const ghostSpawn = ghostSpawns[i];
+        console.log(ghostSpawns);
+        ghostSpawn.draw();
+        // ctx?.clearRect(0, 0, canvas?.width ?? 0, canvas?.height ?? 0);
+      }
+      boundaries.forEach((boundary: Boundary) => {
+        boundary.draw();
+        if (
+          circleCollidesWithRectangle({ circle: player, rectangle: boundary })
+        ) {
+          player!.velocity!.x = 0;
+          player!.velocity!.y = 0;
+        }
+      });
+
       for (let i = ghosts.length - 1; i >= 0; i--) {
         const ghost = ghosts[i];
         if (
@@ -484,15 +580,6 @@ const PacmanCanvas: React.FC = () => {
           addScore();
         }
       }
-      boundaries.forEach((boundary: Boundary) => {
-        boundary.draw();
-        if (
-          circleCollidesWithRectangle({ circle: player, rectangle: boundary })
-        ) {
-          player!.velocity!.x = 0;
-          player!.velocity!.y = 0;
-        }
-      });
       player.update();
       ghosts.forEach((ghost) => {
         ghost.update();

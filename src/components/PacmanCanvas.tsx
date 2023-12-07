@@ -13,10 +13,7 @@ const PacmanCanvas: React.FC = () => {
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const [score, setScore] = useState<number>(0);
   function addScore(): void {
-    console.log("addScore", score);
-    // setScore(score + 10);
     setScore((prevScore) => {
-      console.log("addScore", prevScore);
       return prevScore + 10;
     });
   }
@@ -42,12 +39,11 @@ const PacmanCanvas: React.FC = () => {
     const pellets = Array<Pellet>();
     const powerUps = Array<PowerUp>();
     const ghosts = Array<Ghost>();
-    const ghostSpawns = Array<GhostSpawn>();
     ghosts.push(
       new Ghost({
         position: {
-          x: Boundary.width * 6 + Boundary.width / 2,
-          y: Boundary.height + Boundary.height / 2,
+          x: Boundary.width * 5 + Boundary.width / 2,
+          y: Boundary.height * 5 + Boundary.height / 2,
         },
         velocity: { x: Ghost.speed, y: 0 },
         color: "red",
@@ -55,16 +51,29 @@ const PacmanCanvas: React.FC = () => {
       }),
       new Ghost({
         position: {
-          x: Boundary.width * 6 + Boundary.width / 2,
-          y: Boundary.height * 3 + Boundary.height / 2,
+          x: Boundary.width * 5 + Boundary.width / 2,
+          y: Boundary.height * 6 + Boundary.height / 2,
         },
         velocity: {
-          x: Ghost.speed,
+          // x: Ghost.speed,
+          x: 0,
           y: 0,
         },
         color: "pink",
         ctx: canvasCtxRef.current,
       }),
+      new Ghost({
+        position: {
+          x: Boundary.width * 4 + Boundary.width / 2,
+          y: Boundary.height * 6 + Boundary.height /2,
+        },
+        velocity: {
+          x: 0,
+          y: 0,
+        },
+        color: "aqua",
+        ctx: canvasCtxRef.current,
+      })
     );
     const player = new Player({
       position: {
@@ -95,6 +104,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeHorizontal.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -107,6 +117,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeVertical.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -119,6 +130,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeCorner1.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -131,6 +143,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeCorner2.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -143,6 +156,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeCorner3.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -155,6 +169,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeCorner4.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -167,6 +182,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/block.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -179,6 +195,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/capLeft.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -191,6 +208,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/capRight.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -203,6 +221,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/capBottom.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -215,6 +234,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/capTop.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -227,6 +247,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeCross.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -239,6 +260,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeConnectorTop.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -251,6 +273,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeConnectorRight.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -263,6 +286,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("/img/pipeConnectorBottom.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -275,6 +299,7 @@ const PacmanCanvas: React.FC = () => {
                 },
                 image: createImage("./../../public/img/pipeConnectorLeft.png"),
                 ctx: canvasCtxRef.current,
+                pattern: null,
               }),
             );
             break;
@@ -301,8 +326,8 @@ const PacmanCanvas: React.FC = () => {
             );
             break;
           case "i":
-            ghostSpawns.push(
-              new GhostSpawn({
+            boundaries.push(
+              new Boundary({
                 position: {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
@@ -314,8 +339,8 @@ const PacmanCanvas: React.FC = () => {
             );
             break;
           case "j":
-            ghostSpawns.push(
-              new GhostSpawn({
+            boundaries.push(
+              new Boundary({
                 position: {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
@@ -327,8 +352,8 @@ const PacmanCanvas: React.FC = () => {
             );
             break;
           case "k":
-            ghostSpawns.push(
-              new GhostSpawn({
+            boundaries.push(
+              new Boundary({
                 position: {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
@@ -340,8 +365,8 @@ const PacmanCanvas: React.FC = () => {
             );
             break;
           case "l":
-            ghostSpawns.push(
-              new GhostSpawn({
+            boundaries.push(
+              new Boundary({
                 position: {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
@@ -353,8 +378,8 @@ const PacmanCanvas: React.FC = () => {
             );
             break;
           case "m":
-            ghostSpawns.push(
-              new GhostSpawn({
+            boundaries.push(
+              new Boundary({
                 position: {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
@@ -366,8 +391,8 @@ const PacmanCanvas: React.FC = () => {
             );
             break;
           case "n":
-            ghostSpawns.push(
-              new GhostSpawn({
+            boundaries.push(
+              new Boundary({
                 position: {
                   x: Boundary.width * j,
                   y: Boundary.height * i,
@@ -402,7 +427,7 @@ const PacmanCanvas: React.FC = () => {
       rectangle,
     }: {
       circle: Player | Ghost;
-      rectangle: Boundary;
+      rectangle: Boundary | GhostSpawn ;
     }) {
       const padding = Boundary.width / 2 - circle.radius - 1;
       return (
@@ -524,12 +549,6 @@ const PacmanCanvas: React.FC = () => {
           });
         }
       }
-      for (let i = ghostSpawns.length - 1; i >= 0; i--) {
-        const ghostSpawn = ghostSpawns[i];
-        console.log(ghostSpawns);
-        ghostSpawn.draw();
-        // ctx?.clearRect(0, 0, canvas?.width ?? 0, canvas?.height ?? 0);
-      }
       boundaries.forEach((boundary: Boundary) => {
         boundary.draw();
         if (
@@ -584,6 +603,30 @@ const PacmanCanvas: React.FC = () => {
       ghosts.forEach((ghost) => {
         ghost.update();
         const collisions = Array<string>();
+        if(ghost.color === "pink" && animationId < 300) {
+          return;
+        } 
+        if(ghost.color === "pink" && animationId === 300) {
+          ghost.position = {
+            x: Boundary.width * 5 + Boundary.width / 2,
+            y: Boundary.height * 5 + Boundary.height / 2,
+          };        
+          ghost.velocity = {
+            x: Ghost.speed, y: 0
+          }
+        }
+        if(ghost.color === "aqua" && animationId < 500) {
+          return;
+        }
+        if(ghost.color === "aqua" && animationId === 500){
+          ghost.position = {
+            x: Boundary.width * 5 + Boundary.width / 2,
+            y: Boundary.height * 5 + Boundary.height / 2,
+          };        
+          ghost.velocity = {
+            x: Ghost.speed, y: 0
+          }
+        }
         boundaries.forEach((boundary: Boundary) => {
           boundary.draw();
           const tempGhost = new Ghost({

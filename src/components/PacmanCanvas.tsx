@@ -29,9 +29,9 @@ const PacmanCanvas: React.FC = () => {
       ["|", ".", "^", ".", "i", "j", "k", ".", "^", ".", "|"],
       ["|", ".", "_", ".", "l", "m", "n", ".", "_", ".", "|"],
       ["|", ".", ".", ".", ".", " ", ".", ".", ".", ".", "|"],
-      ["|", ".", "1", "]", ".", "^", ".", "[", "2", ".", "|"],
-      ["|", ".", "|", ".", ".", "|", ".", ".", "|", ".", "|"],
-      ["|", ".", "_", ".", "[", "5", "]", ".", "_", ".", "|"],
+      ["|", ".", "[", "]", ".", "^", ".", "[", "]", ".", "|"],
+      ["|", ".", ".", ".", ".", "|", ".", ".", ".", ".", "|"],
+      ["|", ".", "b", ".", "[", "5", "]", ".", "b", ".", "|"],
       ["|", "p", ".", ".", ".", ".", ".", ".", ".", "p", "|"],
       ["3", "-", "-", "-", "-", "-", "-", "-", "-", "-", "4"],
     ];
@@ -52,12 +52,11 @@ const PacmanCanvas: React.FC = () => {
       new Ghost({
         position: {
           x: Boundary.width * 5 + Boundary.width / 2,
-          y: Boundary.height * 6 + Boundary.height / 2,
+          y: Boundary.height * 7 + Boundary.height / 2,
         },
         velocity: {
-          // x: Ghost.speed,
           x: 0,
-          y: 0,
+          y: -1,
         },
         color: "pink",
         ctx: canvasCtxRef.current,
@@ -65,15 +64,27 @@ const PacmanCanvas: React.FC = () => {
       new Ghost({
         position: {
           x: Boundary.width * 4 + Boundary.width / 2,
-          y: Boundary.height * 6 + Boundary.height /2,
+          y: Boundary.height * 6 + Boundary.height / 2,
         },
         velocity: {
           x: 0,
-          y: 0,
+          y: 1,
         },
         color: "aqua",
         ctx: canvasCtxRef.current,
-      })
+      }),
+      new Ghost({
+        position: {
+          x: Boundary.width * 6 + Boundary.width / 2,
+          y: Boundary.height * 6 + Boundary.height / 2,
+        },
+        velocity: {
+          x: 0,
+          y: 1,
+        },
+        color: "orange",
+        ctx: canvasCtxRef.current,
+      }),
     );
     const player = new Player({
       position: {
@@ -427,7 +438,7 @@ const PacmanCanvas: React.FC = () => {
       rectangle,
     }: {
       circle: Player | Ghost;
-      rectangle: Boundary | GhostSpawn ;
+      rectangle: Boundary | GhostSpawn;
     }) {
       const padding = Boundary.width / 2 - circle.radius - 1;
       return (
@@ -603,30 +614,56 @@ const PacmanCanvas: React.FC = () => {
       ghosts.forEach((ghost) => {
         ghost.update();
         const collisions = Array<string>();
-        if(ghost.color === "pink" && animationId < 300) {
+        if (ghost.color === "pink" && animationId < 300) {
+          if (ghost.position.y < Boundary.height * 6 + Boundary.height / 2) {
+            ghost.velocity.y = 1;
+            console.log("Pink is in spawn going UP", ghost.position);
+          } else if (
+            ghost.position.y >
+            Boundary.height * 7 + Boundary.height / 2
+          ) {
+            ghost.velocity.y = -1;
+            console.log("Pink is in spawn going DOWN", ghost.position);
+          }
           return;
-        } 
-        if(ghost.color === "pink" && animationId === 300) {
+        }
+        if (ghost.color === "pink" && animationId === 300) {
           ghost.position = {
             x: Boundary.width * 5 + Boundary.width / 2,
             y: Boundary.height * 5 + Boundary.height / 2,
-          };        
+          };
           ghost.velocity = {
-            x: Ghost.speed, y: 0
-          }
+            x: Ghost.speed,
+            y: 0,
+          };
         }
-        if(ghost.color === "aqua" && animationId < 500) {
+        if (ghost.color === "aqua" && animationId < 500) {
           return;
         }
-        if(ghost.color === "aqua" && animationId === 500){
+        if (ghost.color === "aqua" && animationId === 500) {
           ghost.position = {
             x: Boundary.width * 5 + Boundary.width / 2,
             y: Boundary.height * 5 + Boundary.height / 2,
-          };        
+          };
           ghost.velocity = {
-            x: Ghost.speed, y: 0
-          }
+            x: Ghost.speed,
+            y: 0,
+          };
         }
+        if (ghost.color === "orange" && animationId < 700) {
+          return;
+        }
+        if (ghost.color === "orange" && animationId === 700) {
+          ghost.position = {
+            x: Boundary.width * 5 + Boundary.width / 2,
+            y: Boundary.height * 5 + Boundary.height / 2,
+          };
+          ghost.velocity = {
+            x: Ghost.speed,
+            y: 0,
+          };
+        }
+
         boundaries.forEach((boundary: Boundary) => {
           boundary.draw();
           const tempGhost = new Ghost({

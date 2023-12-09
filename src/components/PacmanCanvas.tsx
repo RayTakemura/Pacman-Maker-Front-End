@@ -80,7 +80,7 @@ const PacmanCanvas: React.FC = () => {
         },
         velocity: {
           x: 0,
-          y: 0,
+          y: -1,
         },
         color: "orange",
         ctx: canvasCtxRef.current,
@@ -680,20 +680,6 @@ const PacmanCanvas: React.FC = () => {
           ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) >=
             Math.floor(ghost.radius / 4)
         ) {
-          console.log("ghost.position.x", ghost.position.x);
-          console.log(
-            "(Boundary.width * 5 + Boundary.width / 2)",
-            Boundary.width * 5 + Boundary.width / 2,
-          );
-          console.log(
-            "ghost.position.x - (Boundary.width * 5 + Boundary.width / 2)",
-            ghost.position.x - (Boundary.width * 5 + Boundary.width / 2),
-          );
-          console.log(
-            "ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) < Math.floor(ghost.radius / 2)",
-            ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) <
-              Math.floor(ghost.radius / 2),
-          );
           ghost.velocity = {
             x: 0,
             y: -Ghost.speed,
@@ -715,10 +701,46 @@ const PacmanCanvas: React.FC = () => {
           };
           ghostLaps.aqua++;
         }
-        if (ghost.color === "orange" && animationId < 700) {
+        if (
+          ghost.color === "orange" &&
+          ghostLaps.orange < ghostLapFinish.orange
+        ) {
+          if (ghost.position.y < Boundary.height * 6 + Boundary.height / 2) {
+            if (ghostLaps.orange === ghostLapFinish.orange - 1) {
+              ghost.velocity = {
+                x: -1,
+                y: 0,
+              };
+              ghostLaps.orange++;
+              return;
+            }
+            ghost.velocity.y = 1;
+          } else if (
+            ghost.position.y >
+            Boundary.height * 7 + Boundary.height / 2
+          ) {
+            ghostLaps.orange++;
+            ghost.velocity.y = -1;
+          }
           return;
         }
-        if (ghost.color === "orange" && animationId === 700) {
+        if (
+          ghost.color === "orange" &&
+          ghostLaps.orange === ghostLapFinish.orange &&
+          ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) <=
+            Math.floor(ghost.radius / 4)
+        ) {
+          ghost.velocity = {
+            x: 0,
+            y: -Ghost.speed,
+          };
+        }
+        if (
+          ghost.color === "orange" &&
+          ghostLaps.orange === ghostLapFinish.orange &&
+          ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) <
+            Math.floor(ghost.radius / 2)
+        ) {
           ghost.position = {
             x: Boundary.width * 5 + Boundary.width / 2,
             y: Boundary.height * 5 + Boundary.height / 2,
@@ -727,6 +749,7 @@ const PacmanCanvas: React.FC = () => {
             x: Ghost.speed,
             y: 0,
           };
+          ghostLaps.orange++;
         }
 
         boundaries.forEach((boundary: Boundary) => {

@@ -460,7 +460,7 @@ const PacmanCanvas: React.FC = () => {
     };
     const ghostLapFinish = {
       pink: 3,
-      aqua: 4,
+      aqua: 6,
       orange: 9,
     };
 
@@ -637,24 +637,6 @@ const PacmanCanvas: React.FC = () => {
           }
           return;
         }
-        // if (ghost.color === "pink" && ghostLaps.pink > ghostLapFinish.pink) {
-        //   console.log("ghost y velocity", ghost.velocity.y);
-        //   console.log("ghost.position.y", ghost.position.y);
-        //   console.log(
-        //     "(Boundary.height * 5 + Boundary.height / 2)",
-        //     Boundary.height * 5 + Boundary.height / 2,
-        //   );
-        //   console.log(
-        //     "ghost.position.y - (Boundary.height * 5 + Boundary.height / 2)",
-        //     ghost.position.y - (Boundary.height * 5 + Boundary.height / 2),
-        //   );
-        //   console.log(
-        //     "bool:",
-        //     ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) < 10,
-        //   );
-        //   console.log(animationId);
-        //   // ghostLaps.pink++;
-        // }
         if (
           ghost.color === "pink" &&
           ghostLaps.pink === ghostLapFinish.pink &&
@@ -674,6 +656,14 @@ const PacmanCanvas: React.FC = () => {
         }
         if (ghost.color === "aqua" && ghostLaps.aqua < ghostLapFinish.aqua) {
           if (ghost.position.y < Boundary.height * 6 + Boundary.height / 2) {
+            if (ghostLaps.aqua === ghostLapFinish.aqua - 1) {
+              ghost.velocity = {
+                x: 1,
+                y: 0,
+              };
+              ghostLaps.aqua++;
+              return;
+            }
             ghost.velocity.y = 1;
           } else if (
             ghost.position.y >
@@ -684,7 +674,37 @@ const PacmanCanvas: React.FC = () => {
           }
           return;
         }
-        if (ghost.color === "aqua" && animationId === 500) {
+        if (
+          ghost.color === "aqua" &&
+          ghostLaps.aqua === ghostLapFinish.aqua &&
+          ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) >=
+            Math.floor(ghost.radius / 4)
+        ) {
+          console.log("ghost.position.x", ghost.position.x);
+          console.log(
+            "(Boundary.width * 5 + Boundary.width / 2)",
+            Boundary.width * 5 + Boundary.width / 2,
+          );
+          console.log(
+            "ghost.position.x - (Boundary.width * 5 + Boundary.width / 2)",
+            ghost.position.x - (Boundary.width * 5 + Boundary.width / 2),
+          );
+          console.log(
+            "ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) < Math.floor(ghost.radius / 2)",
+            ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) <
+              Math.floor(ghost.radius / 2),
+          );
+          ghost.velocity = {
+            x: 0,
+            y: -Ghost.speed,
+          };
+        }
+        if (
+          ghost.color === "aqua" &&
+          ghostLaps.aqua === ghostLapFinish.aqua &&
+          ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) <
+            Math.floor(ghost.radius / 2)
+        ) {
           ghost.position = {
             x: Boundary.width * 5 + Boundary.width / 2,
             y: Boundary.height * 5 + Boundary.height / 2,
@@ -693,6 +713,7 @@ const PacmanCanvas: React.FC = () => {
             x: Ghost.speed,
             y: 0,
           };
+          ghostLaps.aqua++;
         }
         if (ghost.color === "orange" && animationId < 700) {
           return;

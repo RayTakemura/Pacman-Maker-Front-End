@@ -35,7 +35,6 @@ export class Boundary {
     // );
     // if(!this.pattern) {
     if (this.pattern === "j") {
-      console.log(this.pattern);
       this.c!.drawImage(
         this.image,
         this.position.x,

@@ -18,7 +18,7 @@ const PacmanCanvas: React.FC = () => {
     });
   }
   function startGame() {
-    console.log("beginning startGame");
+    // console.log("beginning startGame");
     const map = [
       ["1", "-", "-", "-", "-", "-", "-", "-", "-", "-", "2"],
       ["|", "p", ".", ".", ".", ".", ".", ".", ".", "p", "|"],
@@ -68,7 +68,7 @@ const PacmanCanvas: React.FC = () => {
         },
         velocity: {
           x: 0,
-          y: 1,
+          y: -1,
         },
         color: "aqua",
         ctx: canvasCtxRef.current,
@@ -80,7 +80,7 @@ const PacmanCanvas: React.FC = () => {
         },
         velocity: {
           x: 0,
-          y: 1,
+          y: 0,
         },
         color: "orange",
         ctx: canvasCtxRef.current,
@@ -453,9 +453,20 @@ const PacmanCanvas: React.FC = () => {
       );
     }
     let animationId: number;
+    const ghostLaps = {
+      pink: 0,
+      aqua: 0,
+      orange: 0,
+    };
+    const ghostLapFinish = {
+      pink: 3,
+      aqua: 4,
+      orange: 9,
+    };
+
     function animate() {
       animationId = requestAnimationFrame(animate);
-      console.log(animationId);
+      // console.log(animationId);
       const ctx = canvasCtxRef.current;
       const canvas = canvasRef.current;
       ctx?.clearRect(0, 0, canvas?.width ?? 0, canvas?.height ?? 0);
@@ -614,20 +625,43 @@ const PacmanCanvas: React.FC = () => {
       ghosts.forEach((ghost) => {
         ghost.update();
         const collisions = Array<string>();
-        if (ghost.color === "pink" && animationId < 300) {
+        if (ghost.color === "pink" && ghostLaps.pink < ghostLapFinish.pink) {
           if (ghost.position.y < Boundary.height * 6 + Boundary.height / 2) {
             ghost.velocity.y = 1;
-            console.log("Pink is in spawn going UP", ghost.position);
           } else if (
             ghost.position.y >
             Boundary.height * 7 + Boundary.height / 2
           ) {
+            ghostLaps.pink++;
             ghost.velocity.y = -1;
-            console.log("Pink is in spawn going DOWN", ghost.position);
           }
           return;
         }
-        if (ghost.color === "pink" && animationId === 300) {
+        // if (ghost.color === "pink" && ghostLaps.pink > ghostLapFinish.pink) {
+        //   console.log("ghost y velocity", ghost.velocity.y);
+        //   console.log("ghost.position.y", ghost.position.y);
+        //   console.log(
+        //     "(Boundary.height * 5 + Boundary.height / 2)",
+        //     Boundary.height * 5 + Boundary.height / 2,
+        //   );
+        //   console.log(
+        //     "ghost.position.y - (Boundary.height * 5 + Boundary.height / 2)",
+        //     ghost.position.y - (Boundary.height * 5 + Boundary.height / 2),
+        //   );
+        //   console.log(
+        //     "bool:",
+        //     ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) < 10,
+        //   );
+        //   console.log(animationId);
+        //   // ghostLaps.pink++;
+        // }
+        if (
+          ghost.color === "pink" &&
+          ghostLaps.pink === ghostLapFinish.pink &&
+          ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) <
+            Math.floor(ghost.radius / 2)
+        ) {
+          console.log(ghostLaps);
           ghost.position = {
             x: Boundary.width * 5 + Boundary.width / 2,
             y: Boundary.height * 5 + Boundary.height / 2,
@@ -636,8 +670,18 @@ const PacmanCanvas: React.FC = () => {
             x: Ghost.speed,
             y: 0,
           };
+          ghostLaps.pink++;
         }
-        if (ghost.color === "aqua" && animationId < 500) {
+        if (ghost.color === "aqua" && ghostLaps.aqua < ghostLapFinish.aqua) {
+          if (ghost.position.y < Boundary.height * 6 + Boundary.height / 2) {
+            ghost.velocity.y = 1;
+          } else if (
+            ghost.position.y >
+            Boundary.height * 7 + Boundary.height / 2
+          ) {
+            ghostLaps.aqua++;
+            ghost.velocity.y = -1;
+          }
           return;
         }
         if (ghost.color === "aqua" && animationId === 500) {
@@ -722,15 +766,15 @@ const PacmanCanvas: React.FC = () => {
           if (ghost.velocity.x < 0) ghost.prevCollisions.push("left");
           if (ghost.velocity.y > 0) ghost.prevCollisions.push("down");
           if (ghost.velocity.y < 0) ghost.prevCollisions.push("up");
-          console.log(collisions);
-          console.log(ghost.prevCollisions);
+          // console.log(collisions);
+          // console.log(ghost.prevCollisions);
           const pathways = ghost.prevCollisions.filter((collision) => {
             return !collisions.includes(collision);
           });
-          console.log({ pathways });
+          // console.log({ pathways });
           const direction =
             pathways[Math.floor(Math.random() * pathways.length)]; //TODO: find a way to target the player instead of complete random
-          console.log(direction);
+          // console.log(direction);
           switch (direction) {
             case "down":
               ghost.velocity.y = Ghost.speed;
@@ -760,7 +804,7 @@ const PacmanCanvas: React.FC = () => {
 
     animate();
     addEventListener("keydown", ({ key }) => {
-      console.log("keydown", key);
+      // console.log("keydown", key);
       switch (key) {
         case "w":
           keys!.w!.pressed = true;
@@ -781,7 +825,7 @@ const PacmanCanvas: React.FC = () => {
       }
     });
     addEventListener("keyup", ({ key }) => {
-      console.log("keyup", key);
+      // console.log("keyup", key);
       switch (key) {
         case "w":
           keys!.w!.pressed = false;
@@ -807,7 +851,7 @@ const PacmanCanvas: React.FC = () => {
       canvasCtxRef.current = can.getContext("2d");
       // const ctx = canvasCtxRef.current;
       startGame();
-      console.log("after startGame()");
+      // console.log("after startGame()");
     }
   }, []);
   return (

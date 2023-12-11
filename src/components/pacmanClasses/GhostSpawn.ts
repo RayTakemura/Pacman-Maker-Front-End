@@ -1,39 +1,39 @@
-export class Boundary {
+export class GhostSpawn {
   static width = 40;
   static height = 40;
   position: { x: number; y: number };
   width: number;
   height: number;
+  pattern: string;
   image: HTMLImageElement;
-  pattern: string | null;
   c: CanvasRenderingContext2D | null;
   constructor({
     position,
+    pattern,
     image,
     ctx,
-    pattern,
   }: {
     position: { x: number; y: number };
+    pattern: string;
     image: HTMLImageElement;
     ctx: CanvasRenderingContext2D | null;
-    pattern: string | null;
   }) {
     this.position = position;
     this.width = 40;
     this.height = 40;
+    this.pattern = pattern;
     this.image = image;
     this.c = ctx;
-    this.pattern = pattern;
   }
   draw() {
-    // this!.c!.fillStyle = "blue";
-    // this!.c!.fillRect(
+    // this!.c!.clearRect(
     //   this.position.x,
     //   this.position.y,
     //   this.width,
     //   this.height,
     // );
-    // if(!this.pattern) {
+    // this!.c!.lineWidth = 4;
+    // this!.c!.lineJoin = "round";
     if (this.pattern === "j") {
       this.c!.drawImage(
         this.image,
@@ -50,9 +50,22 @@ export class Boundary {
         this.width,
         3,
       );
-    }else{
-      this.c!.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
+    } else {
+      this.c!.drawImage(
+        this.image,
+        this.position.x,
+        this.position.y,
+        this.width,
+        this.height,
+      );
     }
-    // }
+
+    // this!.c!.fillStyle = "blue";
+    // this!.c!.fillRect(
+    //   this.position.x,
+    //   this.position.y,
+    //   this.width,
+    //   this.height,
+    // );
   }
 }

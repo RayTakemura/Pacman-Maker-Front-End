@@ -5,6 +5,7 @@ export class Ghost {
   radius: number;
   prevCollisions = Array<string>();
   static speed = 2;
+  static spawnSpeed = 1;
   scared: boolean;
   c: CanvasRenderingContext2D | null;
 
@@ -25,6 +26,7 @@ export class Ghost {
     this.radius = 15;
     this.prevCollisions = Array<string>();
     this.speed = 2;
+    // this.spawnSpeed = 1;
     this.scared = false;
     this.c = ctx;
   }

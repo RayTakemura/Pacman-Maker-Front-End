@@ -18,6 +18,7 @@ const PacmanCanvas: React.FC = () => {
     });
   }
   function startGame() {
+    let spawnEntrance: {x: number, y: number};
     // console.log("beginning startGame");
     const map = [
       ["1", "-", "-", "-", "-", "-", "-", "-", "-", "-", "2"],
@@ -350,6 +351,9 @@ const PacmanCanvas: React.FC = () => {
             );
             break;
           case "j":
+            spawnEntrance = {x: (Boundary.width * j) + Math.floor(Boundary.width / 2), y: (Boundary.height * (i - 1)) + Math.floor(Boundary.height / 2)};
+            // console.log("spawnEntrance", spawnEntrance);
+
             boundaries.push(
               new Boundary({
                 position: {
@@ -591,7 +595,45 @@ const PacmanCanvas: React.FC = () => {
           ghost.radius + player.radius
         ) {
           if (ghost.scared) {
-            ghosts.splice(i, 1);
+            // const g = ghosts.splice(i, 1)[0];
+            cancelAnimationFrame(animationId);
+            setTimeout(() => {
+            ghost.velocity = {x: 0, y:0}
+              switch (ghost.color) {
+                case "pink":
+                  ghostLaps.pink = 0;
+                  ghost.velocity = {x: 0, y: 1};
+                  ghost.position = {
+                    x: Boundary.width * 5 + Boundary.width / 2,
+                    y: Boundary.height * 7 + Boundary.height / 2,
+                  };
+                  break;
+                case "aqua":
+                  ghostLaps.aqua = 0;
+                  ghost.velocity = {x: 0, y: -1};
+                  ghost.position = {
+                    x: Boundary.width * 4 + Boundary.width / 2,
+                    y: Boundary.height * 6 + Boundary.height / 2,
+                  };
+                  break;
+                case "orange":
+                  ghostLaps.orange = 0;
+                  ghost.velocity = {x: 0, y: -1};
+                  ghost.position = {
+                    x: Boundary.width * 6 + Boundary.width / 2,
+                    y: Boundary.height * 6 + Boundary.height / 2,
+                  };
+                  break;
+
+                default:
+                  ghost.position = {...spawnEntrance};
+                  ghost.velocity = {x: Ghost.speed, y: 0}
+                  break;
+              }
+              ghost.scared = false;
+              animate();
+            }, 500)
+            
           } else {
             cancelAnimationFrame(animationId);
             console.log("you lose");
@@ -600,7 +642,7 @@ const PacmanCanvas: React.FC = () => {
       }
 
       // win condition
-      if (pellets.length === 0) {
+      if (pellets.length === 0 && powerUps.length === 0) {
         cancelAnimationFrame(animationId);
         console.log("you win!");
       }
@@ -643,11 +685,7 @@ const PacmanCanvas: React.FC = () => {
           ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) <
             Math.floor(ghost.radius / 2)
         ) {
-          console.log(ghostLaps);
-          ghost.position = {
-            x: Boundary.width * 5 + Boundary.width / 2,
-            y: Boundary.height * 5 + Boundary.height / 2,
-          };
+          ghost.position = {...spawnEntrance};
           ghost.velocity = {
             x: Ghost.speed,
             y: 0,
@@ -691,10 +729,8 @@ const PacmanCanvas: React.FC = () => {
           ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) <
             Math.floor(ghost.radius / 2)
         ) {
-          ghost.position = {
-            x: Boundary.width * 5 + Boundary.width / 2,
-            y: Boundary.height * 5 + Boundary.height / 2,
-          };
+
+          ghost.position = {...spawnEntrance};
           ghost.velocity = {
             x: Ghost.speed,
             y: 0,
@@ -730,10 +766,7 @@ const PacmanCanvas: React.FC = () => {
           ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) <=
             Math.floor(ghost.radius / 4)
         ) {
-          ghost.velocity = {
-            x: 0,
-            y: -Ghost.speed,
-          };
+          ghost.position = {...spawnEntrance};
         }
         if (
           ghost.color === "orange" &&

@@ -25,7 +25,7 @@ export class Ghost {
     this.color = color;
     this.radius = 15;
     this.prevCollisions = Array<string>();
-    this.speed = 2;
+    // this.speed = 2;
     // this.spawnSpeed = 1;
     this.scared = false;
     this.c = ctx;

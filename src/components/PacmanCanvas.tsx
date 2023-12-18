@@ -18,7 +18,7 @@ const PacmanCanvas: React.FC = () => {
     });
   }
   function startGame() {
-    let spawnEntrance: {x: number, y: number};
+    let spawnEntrance: { x: number; y: number };
     // console.log("beginning startGame");
     const map = [
       ["1", "-", "-", "-", "-", "-", "-", "-", "-", "-", "2"],
@@ -351,7 +351,10 @@ const PacmanCanvas: React.FC = () => {
             );
             break;
           case "j":
-            spawnEntrance = {x: (Boundary.width * j) + Math.floor(Boundary.width / 2), y: (Boundary.height * (i - 1)) + Math.floor(Boundary.height / 2)};
+            spawnEntrance = {
+              x: Boundary.width * j + Math.floor(Boundary.width / 2),
+              y: Boundary.height * (i - 1) + Math.floor(Boundary.height / 2),
+            };
             // console.log("spawnEntrance", spawnEntrance);
 
             boundaries.push(
@@ -598,11 +601,11 @@ const PacmanCanvas: React.FC = () => {
             // const g = ghosts.splice(i, 1)[0];
             cancelAnimationFrame(animationId);
             setTimeout(() => {
-            ghost.velocity = {x: 0, y:0}
+              ghost.velocity = { x: 0, y: 0 };
               switch (ghost.color) {
                 case "pink":
                   ghostLaps.pink = 0;
-                  ghost.velocity = {x: 0, y: 1};
+                  ghost.velocity = { x: 0, y: 1 };
                   ghost.position = {
                     x: Boundary.width * 5 + Boundary.width / 2,
                     y: Boundary.height * 7 + Boundary.height / 2,
@@ -610,7 +613,7 @@ const PacmanCanvas: React.FC = () => {
                   break;
                 case "aqua":
                   ghostLaps.aqua = 0;
-                  ghost.velocity = {x: 0, y: -1};
+                  ghost.velocity = { x: 0, y: -1 };
                   ghost.position = {
                     x: Boundary.width * 4 + Boundary.width / 2,
                     y: Boundary.height * 6 + Boundary.height / 2,
@@ -618,7 +621,7 @@ const PacmanCanvas: React.FC = () => {
                   break;
                 case "orange":
                   ghostLaps.orange = 0;
-                  ghost.velocity = {x: 0, y: -1};
+                  ghost.velocity = { x: 0, y: -1 };
                   ghost.position = {
                     x: Boundary.width * 6 + Boundary.width / 2,
                     y: Boundary.height * 6 + Boundary.height / 2,
@@ -626,14 +629,13 @@ const PacmanCanvas: React.FC = () => {
                   break;
 
                 default:
-                  ghost.position = {...spawnEntrance};
-                  ghost.velocity = {x: Ghost.speed, y: 0}
+                  ghost.position = { ...spawnEntrance };
+                  ghost.velocity = { x: Ghost.speed, y: 0 };
                   break;
               }
               ghost.scared = false;
               animate();
-            }, 500)
-            
+            }, 500);
           } else {
             cancelAnimationFrame(animationId);
             console.log("you lose");
@@ -685,7 +687,7 @@ const PacmanCanvas: React.FC = () => {
           ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) <
             Math.floor(ghost.radius / 2)
         ) {
-          ghost.position = {...spawnEntrance};
+          ghost.position = { ...spawnEntrance };
           ghost.velocity = {
             x: Ghost.speed,
             y: 0,
@@ -729,8 +731,7 @@ const PacmanCanvas: React.FC = () => {
           ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) <
             Math.floor(ghost.radius / 2)
         ) {
-
-          ghost.position = {...spawnEntrance};
+          ghost.position = { ...spawnEntrance };
           ghost.velocity = {
             x: Ghost.speed,
             y: 0,
@@ -766,7 +767,7 @@ const PacmanCanvas: React.FC = () => {
           ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) <=
             Math.floor(ghost.radius / 4)
         ) {
-          ghost.position = {...spawnEntrance};
+          ghost.position = { ...spawnEntrance };
         }
         if (
           ghost.color === "orange" &&
@@ -923,19 +924,17 @@ const PacmanCanvas: React.FC = () => {
     // initiallize
     if (canvasRef.current) {
       const can = canvasRef.current;
-      can!.height = innerHeight;
-      can!.width = innerWidth;
+      can!.height = 14 * Boundary.height;
+      can!.width = 11 * Boundary.width;
       canvasCtxRef.current = can.getContext("2d");
-      // const ctx = canvasCtxRef.current;
       startGame();
-      // console.log("after startGame()");
     }
   }, []);
   return (
-    <>
+    <div className="flex justify-center flex-col">
       <InGameScore score={score} />
-      <canvas className="game" ref={canvasRef}></canvas>;
-    </>
+      <canvas className="game mx-auto" ref={canvasRef}></canvas>
+    </div>
   );
 };
 export default PacmanCanvas;

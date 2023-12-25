@@ -473,6 +473,7 @@ const PacmanCanvas: React.FC = () => {
       orange: 9,
     };
     const timeoutObj : { [key: string]: number;} = {};
+    const blinkObj : { [key: string]: number;} = {};
     function animate() {
       animationId = requestAnimationFrame(animate);
       // console.log(animationId);
@@ -573,17 +574,21 @@ const PacmanCanvas: React.FC = () => {
           // save settimeout value for each ghost
           // if settimeout value is set, cancel it and create a new one
           // else just settimeout
-          console.log("touching");
           powerUps.splice(i, 1);
           ghosts.forEach((ghost) => {
             ghost.scared = true;
-            console.log("timeoutObj", timeoutObj);
             clearTimeout(timeoutObj[ghost.color]);
             timeoutObj[ghost.color] = 0;
             timeoutObj[ghost.color] = setTimeout(() => {
-             console.log("timeoutObj", timeoutObj);
-             ghost.scared = false;
-            }, 5000);
+              ghost.scared = false;
+            }, 10E3);
+            clearInterval(blinkObj[ghost.color]);
+            setTimeout(() => {
+              blinkObj[ghost.color] = setInterval(() => {
+                ghost.blink = !ghost.blink;
+              }, 5E2)
+            }, 5E3);
+
           });
         }
       }

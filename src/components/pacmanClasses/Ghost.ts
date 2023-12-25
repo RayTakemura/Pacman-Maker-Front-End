@@ -7,6 +7,7 @@ export class Ghost {
   static speed = 2;
   static spawnSpeed = 1;
   scared: boolean;
+  blink: boolean;
   // bodyImage: HTMLImageElement;
   // eyesUpDown: HTMLImageElement;
   c: CanvasRenderingContext2D | null;
@@ -30,6 +31,7 @@ export class Ghost {
     // this.speed = 2;
     // this.spawnSpeed = 1;
     this.scared = false;
+    this.blink = false;
     this.c = ctx;
   }
 
@@ -41,7 +43,11 @@ export class Ghost {
     // this!.c!.closePath();
     const bodyImg = new Image();
     if (this.scared) {
-      bodyImg.src = `/img/ScaredGhost.png`;
+      if(this.blink){
+        bodyImg.src = '/img/ScaredGhostBlink.png';
+      }else {
+        bodyImg.src = `/img/ScaredGhost.png`;
+      }
     } else {
       if (this.velocity.x > 0) {
         bodyImg.src = `/img/${this.color}GhostRight.png`;

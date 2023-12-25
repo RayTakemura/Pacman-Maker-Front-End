@@ -7,6 +7,8 @@ export class Ghost {
   static speed = 2;
   static spawnSpeed = 1;
   scared: boolean;
+  // bodyImage: HTMLImageElement;
+  // eyesUpDown: HTMLImageElement;
   c: CanvasRenderingContext2D | null;
 
   constructor({
@@ -32,11 +34,34 @@ export class Ghost {
   }
 
   draw(): void {
-    this!.c!.beginPath();
-    this!.c!.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-    this!.c!.fillStyle = this.scared ? "blue" : this.color;
-    this!.c!.fill();
-    this!.c!.closePath();
+    // this!.c!.beginPath();
+    // this!.c!.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    // this!.c!.fillStyle = this.scared ? "blue" : this.color;
+    // this!.c!.fill();
+    // this!.c!.closePath();
+    const bodyImg = new Image();
+    if (this.scared) {
+      bodyImg.src = `/img/ScaredGhost.png`;
+    } else {
+      if (this.velocity.x > 0) {
+        bodyImg.src = `/img/${this.color}GhostRight.png`;
+      } else if (this.velocity.x < 0) {
+        bodyImg.src = `/img/${this.color}GhostLeft.png`;
+      } else if (this.velocity.y > 0) {
+        bodyImg.src = `/img/${this.color}GhostDown.png`;
+      } else if (this.velocity.y < 0) {
+        bodyImg.src = `/img/${this.color}GhostUp.png`;
+      } else {
+        bodyImg.src = `/img/${this.color}Ghost.png`;
+      }
+    }
+    this.c!.drawImage(
+      bodyImg,
+      this.position.x - this.radius,
+      this.position.y - this.radius,
+      this.radius * 2,
+      this.radius * 2,
+    );
   }
   update(): void {
     this!.draw();

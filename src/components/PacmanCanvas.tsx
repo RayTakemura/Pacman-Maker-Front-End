@@ -461,16 +461,19 @@ const PacmanCanvas: React.FC = () => {
     }
     let animationId: number;
     const ghostLaps = {
+      red: 1,
       pink: 0,
       aqua: 0,
       orange: 0,
     };
     const ghostLapFinish = {
+      red: 1,
       pink: 3,
       aqua: 6,
       orange: 9,
     };
-
+    const timeoutObj : { [key: string]: number;} = {};
+    const blinkObj : { [key: string]: number;} = {};
     function animate() {
       animationId = requestAnimationFrame(animate);
       // console.log(animationId);
@@ -568,13 +571,24 @@ const PacmanCanvas: React.FC = () => {
           ) <
           powerUp.radius + player.radius
         ) {
-          console.log("touching");
+          // save settimeout value for each ghost
+          // if settimeout value is set, cancel it and create a new one
+          // else just settimeout
           powerUps.splice(i, 1);
           ghosts.forEach((ghost) => {
             ghost.scared = true;
-            setTimeout(() => {
+            clearTimeout(timeoutObj[ghost.color]);
+            timeoutObj[ghost.color] = 0;
+            timeoutObj[ghost.color] = setTimeout(() => {
               ghost.scared = false;
-            }, 5000);
+            }, 10E3);
+            clearInterval(blinkObj[ghost.color]);
+            setTimeout(() => {
+              blinkObj[ghost.color] = setInterval(() => {
+                ghost.blink = !ghost.blink;
+              }, 5E2)
+            }, 5E3);
+
           });
         }
       }
@@ -603,6 +617,14 @@ const PacmanCanvas: React.FC = () => {
             setTimeout(() => {
               ghost.velocity = { x: 0, y: 0 };
               switch (ghost.color) {
+                case "red":
+                  ghostLaps.red = 0;
+                  ghost.velocity = { x: 0, y: 1 };
+                  ghost.position = {
+                    x: Boundary.width * 5 + Boundary.width / 2,
+                    y: Boundary.height * 7 + Boundary.height / 2,
+                  };
+                  break;
                 case "pink":
                   ghostLaps.pink = 0;
                   ghost.velocity = { x: 0, y: 1 };
@@ -669,6 +691,31 @@ const PacmanCanvas: React.FC = () => {
       ghosts.forEach((ghost) => {
         ghost.update();
         const collisions = Array<string>();
+        if (ghost.color === "red" && ghostLaps.red < ghostLapFinish.red) {
+          if (ghost.position.y < Boundary.height * 6 + Boundary.height / 2) {
+            ghost.velocity.y = 1;
+          } else if (
+            ghost.position.y >
+            Boundary.height * 7 + Boundary.height / 2
+          ) {
+            ghostLaps.red++;
+            ghost.velocity.y = -1;
+          }
+          return;
+        }
+        if (
+          ghost.color === "red" &&
+          ghostLaps.red === ghostLapFinish.red &&
+          ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) <
+            Math.floor(ghost.radius / 2)
+        ) {
+          ghost.position = { ...spawnEntrance };
+          ghost.velocity = {
+            x: Ghost.speed,
+            y: 0,
+          };
+          ghostLaps.red++;
+        }
         if (ghost.color === "pink" && ghostLaps.pink < ghostLapFinish.pink) {
           if (ghost.position.y < Boundary.height * 6 + Boundary.height / 2) {
             ghost.velocity.y = 1;
@@ -764,10 +811,13 @@ const PacmanCanvas: React.FC = () => {
         if (
           ghost.color === "orange" &&
           ghostLaps.orange === ghostLapFinish.orange &&
-          ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) <=
+          ghost.position.x - (Boundary.width * 5 + Boundary.width / 2) <
             Math.floor(ghost.radius / 4)
         ) {
-          ghost.position = { ...spawnEntrance };
+          ghost.velocity = {
+            x: 0,
+            y: -Ghost.speed,
+          };
         }
         if (
           ghost.color === "orange" &&
@@ -775,10 +825,7 @@ const PacmanCanvas: React.FC = () => {
           ghost.position.y - (Boundary.height * 5 + Boundary.height / 2) <
             Math.floor(ghost.radius / 2)
         ) {
-          ghost.position = {
-            x: Boundary.width * 5 + Boundary.width / 2,
-            y: Boundary.height * 5 + Boundary.height / 2,
-          };
+          ghost.position = { ...spawnEntrance };
           ghost.velocity = {
             x: Ghost.speed,
             y: 0,

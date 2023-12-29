@@ -576,6 +576,7 @@ const PacmanCanvas: React.FC = () => {
           // else just settimeout
           powerUps.splice(i, 1);
           ghosts.forEach((ghost) => {
+            ghost.blink = false;
             ghost.scared = true;
             clearTimeout(timeoutObj[ghost.color]);
             timeoutObj[ghost.color] = 0;

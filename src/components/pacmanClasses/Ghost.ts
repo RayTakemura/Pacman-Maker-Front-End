@@ -7,7 +7,7 @@ export class Ghost {
   static speed = 2;
   static spawnSpeed = 1;
   scared: boolean;
-  blink: boolean;
+  blink: boolean = false;
   // bodyImage: HTMLImageElement;
   // eyesUpDown: HTMLImageElement;
   c: CanvasRenderingContext2D | null;

@@ -584,6 +584,8 @@ const PacmanCanvas: React.FC = () => {
               ghost.scared = false;
             }, 10E3);
             clearInterval(blinkObj[ghost.color]);
+            blinkObj[ghost.color] = 0;
+            console.log("blinkObj", blinkObj)
             setTimeout(() => {
               blinkObj[ghost.color] = setInterval(() => {
                 ghost.blink = !ghost.blink;
@@ -972,16 +974,44 @@ const PacmanCanvas: React.FC = () => {
     // initiallize
     if (canvasRef.current) {
       const can = canvasRef.current;
-      can!.height = 14 * Boundary.height;
-      can!.width = 11 * Boundary.width;
+
+      const gameHeight: number = 14 * Boundary.height;
+      const gameWidth: number = 11 * Boundary.width;
+      const windowHeight: number = window.innerHeight;
+      const windowWidth: number = window.innerWidth;
+      console.log("gameHeight", gameHeight);
+      console.log("gameWidth", gameWidth);
+      console.log("windowHeight", windowHeight);
+      console.log("windowWidth", windowWidth);
+      let adjustmentRatio: number;
+      if(windowWidth < gameWidth && windowHeight > gameHeight){
+        adjustmentRatio = windowWidth / gameWidth;
+      } else if(windowWidth > gameWidth && windowHeight < gameHeight){
+        adjustmentRatio = (windowHeight + 100) / gameHeight;
+      } else {
+        adjustmentRatio = 1;
+      }
+      // can!.height = gameHeight * adjustmentRatio;
+      // can!.width = windowWidth;
+      can!.height = gameHeight;
+      can!.width = gameWidth;
+      // if(windowHeight < gameHeight){
+      //   can!.height = windowHeight;
+      // }else if(){
+      //
+      // }
       canvasCtxRef.current = can.getContext("2d");
+      canvasCtxRef.current!.scale(adjustmentRatio, adjustmentRatio);
       startGame();
     }
   }, []);
   return (
-    <div className="flex justify-center flex-col">
+    <div className="flex justify-center flex-col overflow-hidden">
+      <dialog open className="overflow-hidden h-screen w-full">
       <InGameScore score={score} />
       <canvas className="game mx-auto" ref={canvasRef}></canvas>
+      </dialog>
+
     </div>
   );
 };

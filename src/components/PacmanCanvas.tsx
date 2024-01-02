@@ -474,6 +474,7 @@ const PacmanCanvas: React.FC = () => {
     };
     const timeoutObj : { [key: string]: number;} = {};
     const blinkObj : { [key: string]: number;} = {};
+    const blinkTimeoutObj: {[key:string]: number;} = {};
     function animate() {
       animationId = requestAnimationFrame(animate);
       // console.log(animationId);
@@ -585,8 +586,9 @@ const PacmanCanvas: React.FC = () => {
             }, 10E3);
             clearInterval(blinkObj[ghost.color]);
             blinkObj[ghost.color] = 0;
-            console.log("blinkObj", blinkObj)
-            setTimeout(() => {
+            clearTimeout(blinkTimeoutObj[ghost.color])            
+            blinkTimeoutObj[ghost.color] = 0;
+            blinkTimeoutObj[ghost.color] = setTimeout(() => {
               blinkObj[ghost.color] = setInterval(() => {
                 ghost.blink = !ghost.blink;
               }, 5E2)

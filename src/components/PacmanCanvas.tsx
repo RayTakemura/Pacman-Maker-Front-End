@@ -971,6 +971,63 @@ const PacmanCanvas: React.FC = () => {
           break;
       }
     });
+    const touchStart = {x: 0, y: 0};
+    const touchEnd = {x: 0, y: 0};
+    addEventListener("touchstart", (e) => {
+      console.log(e)
+      touchStart.x = e.changedTouches[0].screenX;
+      touchStart.y = e.changedTouches[0].screenY;
+      
+    })
+    addEventListener("touchend", (e) => {
+      console.log(e);
+      touchEnd.x = e.changedTouches[0].screenX;
+      touchEnd.y = e.changedTouches[0].screenY;
+      const xDiff: number = touchStart.x - touchEnd.x;
+      const yDiff: number = touchStart.y - touchEnd.y;
+      console.log(keys);
+      if(Math.abs(xDiff) < Math.abs(yDiff)){
+        if(yDiff > 0){
+          keys!.a!.pressed = false;
+          keys!.s!.pressed = false;
+          keys!.d!.pressed = false;
+          keys!.w!.pressed = true;
+          lastKey = "w";
+          setTimeout(()=> {
+            keys!.w!.pressed = false;
+          }, 500);
+        }else {
+          keys!.w!.pressed = false;
+          keys!.a!.pressed = false;
+          keys!.d!.pressed = false;
+          keys!.s!.pressed = true;
+          lastKey = "s";
+          setTimeout(()=> {
+            keys!.s!.pressed = false;
+          }, 500);
+        }
+      }else if(Math.abs(xDiff) > Math.abs(yDiff)){
+        if(xDiff > 0){
+          keys!.w!.pressed = false;
+          keys!.d!.pressed = false;
+          keys!.s!.pressed = false;
+          keys!.a.pressed = true;
+          lastKey = "a";
+          setTimeout(()=> {
+            keys!.a!.pressed = false;
+          }, 500);
+        }else {
+          keys!.w!.pressed = false;
+          keys!.a!.pressed = false;
+          keys!.s!.pressed = false;
+          keys!.d!.pressed = true;
+          lastKey = "d";
+          setTimeout(()=> {
+            keys!.d!.pressed = false;
+          }, 500);
+        }
+      }
+    })
   }
   useEffect(() => {
     // initiallize

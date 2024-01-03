@@ -8,13 +8,13 @@ import {
   GhostSpawn,
 } from "./pacmanClasses/index";
 import InGameScore from "./InGameScore";
-const PacmanCanvas: React.FC = () => {
+const Pacman: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const [score, setScore] = useState<number>(0);
-  function addScore(): void {
+  function addScore(newScore): void {
     setScore((prevScore) => {
-      return prevScore + 10;
+      return prevScore + newScore;
     });
   }
   function startGame() {
@@ -475,6 +475,7 @@ const PacmanCanvas: React.FC = () => {
     const timeoutObj : { [key: string]: number;} = {};
     const blinkObj : { [key: string]: number;} = {};
     const blinkTimeoutObj: {[key:string]: number;} = {};
+    let score: number = 200;
     function animate() {
       animationId = requestAnimationFrame(animate);
       // console.log(animationId);
@@ -582,6 +583,7 @@ const PacmanCanvas: React.FC = () => {
             clearTimeout(timeoutObj[ghost.color]);
             timeoutObj[ghost.color] = 0;
             timeoutObj[ghost.color] = setTimeout(() => {
+              score = 200;
               ghost.scared = false;
             }, 10E3);
             clearInterval(blinkObj[ghost.color]);
@@ -619,7 +621,16 @@ const PacmanCanvas: React.FC = () => {
           if (ghost.scared) {
             // const g = ghosts.splice(i, 1)[0];
             cancelAnimationFrame(animationId);
+            ghost.invisible = true;
+            // write the score 
+            canvasCtxRef!.current!.font = "20px Arial";
+            canvasCtxRef!.current!.textAlign = "center";
+            canvasCtxRef!.current!.fillStyle = "cyan";
+            canvasCtxRef!.current!.fillText(`${score}`, ghost.position.x, ghost.position.y);
+            addScore(score);
+            score = score * 2;
             setTimeout(() => {
+              ghost.invisible = false;
               ghost.velocity = { x: 0, y: 0 };
               switch (ghost.color) {
                 case "red":
@@ -689,7 +700,7 @@ const PacmanCanvas: React.FC = () => {
         ) {
           console.log("touching");
           pellets.splice(i, 1);
-          addScore();
+          addScore(10);
         }
       }
       player.update();
@@ -973,6 +984,7 @@ const PacmanCanvas: React.FC = () => {
     });
     const touchStart = {x: 0, y: 0};
     const touchEnd = {x: 0, y: 0};
+    const touchBuffer: number = 200;
     addEventListener("touchstart", (e) => {
       console.log(e)
       touchStart.x = e.changedTouches[0].screenX;
@@ -995,7 +1007,7 @@ const PacmanCanvas: React.FC = () => {
           lastKey = "w";
           setTimeout(()=> {
             keys!.w!.pressed = false;
-          }, 500);
+          }, touchBuffer);
         }else {
           keys!.w!.pressed = false;
           keys!.a!.pressed = false;
@@ -1004,7 +1016,7 @@ const PacmanCanvas: React.FC = () => {
           lastKey = "s";
           setTimeout(()=> {
             keys!.s!.pressed = false;
-          }, 500);
+          }, touchBuffer);
         }
       }else if(Math.abs(xDiff) > Math.abs(yDiff)){
         if(xDiff > 0){
@@ -1015,7 +1027,7 @@ const PacmanCanvas: React.FC = () => {
           lastKey = "a";
           setTimeout(()=> {
             keys!.a!.pressed = false;
-          }, 500);
+          }, touchBuffer);
         }else {
           keys!.w!.pressed = false;
           keys!.a!.pressed = false;
@@ -1024,7 +1036,7 @@ const PacmanCanvas: React.FC = () => {
           lastKey = "d";
           setTimeout(()=> {
             keys!.d!.pressed = false;
-          }, 500);
+          }, touchBuffer);
         }
       }
     })
@@ -1038,10 +1050,6 @@ const PacmanCanvas: React.FC = () => {
       const gameWidth: number = 11 * Boundary.width;
       const windowHeight: number = window.innerHeight;
       const windowWidth: number = window.innerWidth;
-      console.log("gameHeight", gameHeight);
-      console.log("gameWidth", gameWidth);
-      console.log("windowHeight", windowHeight);
-      console.log("windowWidth", windowWidth);
       let adjustmentRatio: number;
       if(windowWidth < gameWidth && windowHeight > gameHeight){
         adjustmentRatio = windowWidth / gameWidth;
@@ -1050,15 +1058,8 @@ const PacmanCanvas: React.FC = () => {
       } else {
         adjustmentRatio = 1;
       }
-      // can!.height = gameHeight * adjustmentRatio;
-      // can!.width = windowWidth;
       can!.height = gameHeight;
       can!.width = gameWidth;
-      // if(windowHeight < gameHeight){
-      //   can!.height = windowHeight;
-      // }else if(){
-      //
-      // }
       canvasCtxRef.current = can.getContext("2d");
       canvasCtxRef.current!.scale(adjustmentRatio, adjustmentRatio);
       startGame();
@@ -1067,11 +1068,11 @@ const PacmanCanvas: React.FC = () => {
   return (
     <div className="flex justify-center flex-col overflow-hidden">
       <dialog open className="overflow-hidden h-screen w-full">
-      <InGameScore score={score} />
-      <canvas className="game mx-auto" ref={canvasRef}></canvas>
+        <InGameScore score={score} />
+        <canvas className="game mx-auto" ref={canvasRef}></canvas>
       </dialog>
 
     </div>
   );
 };
-export default PacmanCanvas;
+export default Pacman;

@@ -8,6 +8,7 @@ export class Ghost {
   static spawnSpeed = 1;
   scared: boolean;
   blink: boolean = false;
+  invisible: boolean = false;
   // bodyImage: HTMLImageElement;
   // eyesUpDown: HTMLImageElement;
   c: CanvasRenderingContext2D | null;
@@ -41,6 +42,7 @@ export class Ghost {
     // this!.c!.fillStyle = this.scared ? "blue" : this.color;
     // this!.c!.fill();
     // this!.c!.closePath();
+    if(this.invisible) return;
     const bodyImg = new Image();
     if (this.scared) {
       if(this.blink){

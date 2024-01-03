@@ -12,7 +12,7 @@ const Pacman: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const [score, setScore] = useState<number>(0);
-  function addScore(newScore): void {
+  function addScore(newScore: number): void {
     setScore((prevScore) => {
       return prevScore + newScore;
     });
@@ -475,7 +475,7 @@ const Pacman: React.FC = () => {
     const timeoutObj : { [key: string]: number;} = {};
     const blinkObj : { [key: string]: number;} = {};
     const blinkTimeoutObj: {[key:string]: number;} = {};
-    let score: number = 200;
+    let ghostScore: number = 200;
     function animate() {
       animationId = requestAnimationFrame(animate);
       // console.log(animationId);
@@ -583,7 +583,7 @@ const Pacman: React.FC = () => {
             clearTimeout(timeoutObj[ghost.color]);
             timeoutObj[ghost.color] = 0;
             timeoutObj[ghost.color] = setTimeout(() => {
-              score = 200;
+              ghostScore = 200;
               ghost.scared = false;
             }, 10E3);
             clearInterval(blinkObj[ghost.color]);
@@ -626,9 +626,9 @@ const Pacman: React.FC = () => {
             canvasCtxRef!.current!.font = "20px Arial";
             canvasCtxRef!.current!.textAlign = "center";
             canvasCtxRef!.current!.fillStyle = "cyan";
-            canvasCtxRef!.current!.fillText(`${score}`, ghost.position.x, ghost.position.y);
-            addScore(score);
-            score = score * 2;
+            canvasCtxRef!.current!.fillText(`${ghostScore}`, ghost.position.x, ghost.position.y);
+            addScore(ghostScore);
+            ghostScore = ghostScore * 2;
             setTimeout(() => {
               ghost.invisible = false;
               ghost.velocity = { x: 0, y: 0 };

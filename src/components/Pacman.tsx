@@ -608,7 +608,10 @@ const Pacman: React.FC = () => {
           player!.velocity!.y = 0;
         }
       });
-
+      // reset the ghost score counter if player ate all the ghosts
+      if(!ghosts[0].scared && !ghosts[1].scared && !ghosts[2].scared && !ghosts[3].scared){
+        ghostScore = 200;
+      }
       for (let i = ghosts.length - 1; i >= 0; i--) {
         const ghost = ghosts[i];
         if (

@@ -54,10 +54,10 @@ a {
   cursor: pointer;
 }
 .pac-slider::-webkit-slider-thumb {
-  background: url("/public/img/Pacman.png");
+  background: url("/img/Pacman.png");
   background-size: 38px;
 }
 .ghost-slider::-webkit-slider-thumb {
-  background: url("/public/img/redGhostRight.png");
+  background: url("/img/redGhostRight.png");
   background-size: 38px 38px;
 }

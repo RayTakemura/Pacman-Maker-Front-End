@@ -26,3 +26,38 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+a {
+  color: yellow;
+  -webkit-text-stroke: 1px blue;
+}
+
+.pac-slider,
+.ghost-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: blue;
+  outline: none;
+  opacity: 1;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2;
+}
+.pac-slider::-webkit-slider-thumb,
+.ghost-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  cursor: pointer;
+}
+.pac-slider::-webkit-slider-thumb {
+  background: url("/public/img/Pacman.png");
+  background-size: 38px;
+}
+.ghost-slider::-webkit-slider-thumb {
+  background: url("/public/img/redGhostRight.png");
+  background-size: 38px 38px;
+}

@@ -472,9 +472,9 @@ const Pacman: React.FC = () => {
       aqua: 6,
       orange: 9,
     };
-    const timeoutObj : { [key: string]: number;} = {};
-    const blinkObj : { [key: string]: number;} = {};
-    const blinkTimeoutObj: {[key:string]: number;} = {};
+    const timeoutObj: { [key: string]: number } = {};
+    const blinkObj: { [key: string]: number } = {};
+    const blinkTimeoutObj: { [key: string]: number } = {};
     let ghostScore: number = 200;
     function animate() {
       animationId = requestAnimationFrame(animate);
@@ -585,17 +585,16 @@ const Pacman: React.FC = () => {
             timeoutObj[ghost.color] = setTimeout(() => {
               ghostScore = 200;
               ghost.scared = false;
-            }, 10E3);
+            }, 10e3);
             clearInterval(blinkObj[ghost.color]);
             blinkObj[ghost.color] = 0;
-            clearTimeout(blinkTimeoutObj[ghost.color])            
+            clearTimeout(blinkTimeoutObj[ghost.color]);
             blinkTimeoutObj[ghost.color] = 0;
             blinkTimeoutObj[ghost.color] = setTimeout(() => {
               blinkObj[ghost.color] = setInterval(() => {
                 ghost.blink = !ghost.blink;
-              }, 5E2)
-            }, 5E3);
-
+              }, 5e2);
+            }, 5e3);
           });
         }
       }
@@ -609,7 +608,12 @@ const Pacman: React.FC = () => {
         }
       });
       // reset the ghost score counter if player ate all the ghosts
-      if(!ghosts[0].scared && !ghosts[1].scared && !ghosts[2].scared && !ghosts[3].scared){
+      if (
+        !ghosts[0].scared &&
+        !ghosts[1].scared &&
+        !ghosts[2].scared &&
+        !ghosts[3].scared
+      ) {
         ghostScore = 200;
       }
       for (let i = ghosts.length - 1; i >= 0; i--) {
@@ -625,11 +629,15 @@ const Pacman: React.FC = () => {
             // const g = ghosts.splice(i, 1)[0];
             cancelAnimationFrame(animationId);
             ghost.invisible = true;
-            // write the score 
+            // write the score
             canvasCtxRef!.current!.font = "20px Arial";
             canvasCtxRef!.current!.textAlign = "center";
             canvasCtxRef!.current!.fillStyle = "cyan";
-            canvasCtxRef!.current!.fillText(`${ghostScore}`, ghost.position.x, ghost.position.y);
+            canvasCtxRef!.current!.fillText(
+              `${ghostScore}`,
+              ghost.position.x,
+              ghost.position.y,
+            );
             addScore(ghostScore);
             ghostScore = ghostScore * 2;
             setTimeout(() => {
@@ -985,15 +993,14 @@ const Pacman: React.FC = () => {
           break;
       }
     });
-    const touchStart = {x: 0, y: 0};
-    const touchEnd = {x: 0, y: 0};
+    const touchStart = { x: 0, y: 0 };
+    const touchEnd = { x: 0, y: 0 };
     const touchBuffer: number = 200;
     addEventListener("touchstart", (e) => {
-      console.log(e)
+      console.log(e);
       touchStart.x = e.changedTouches[0].screenX;
       touchStart.y = e.changedTouches[0].screenY;
-      
-    })
+    });
     addEventListener("touchend", (e) => {
       console.log(e);
       touchEnd.x = e.changedTouches[0].screenX;
@@ -1001,48 +1008,48 @@ const Pacman: React.FC = () => {
       const xDiff: number = touchStart.x - touchEnd.x;
       const yDiff: number = touchStart.y - touchEnd.y;
       console.log(keys);
-      if(Math.abs(xDiff) < Math.abs(yDiff)){
-        if(yDiff > 0){
+      if (Math.abs(xDiff) < Math.abs(yDiff)) {
+        if (yDiff > 0) {
           keys!.a!.pressed = false;
           keys!.s!.pressed = false;
           keys!.d!.pressed = false;
           keys!.w!.pressed = true;
           lastKey = "w";
-          setTimeout(()=> {
+          setTimeout(() => {
             keys!.w!.pressed = false;
           }, touchBuffer);
-        }else {
+        } else {
           keys!.w!.pressed = false;
           keys!.a!.pressed = false;
           keys!.d!.pressed = false;
           keys!.s!.pressed = true;
           lastKey = "s";
-          setTimeout(()=> {
+          setTimeout(() => {
             keys!.s!.pressed = false;
           }, touchBuffer);
         }
-      }else if(Math.abs(xDiff) > Math.abs(yDiff)){
-        if(xDiff > 0){
+      } else if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff > 0) {
           keys!.w!.pressed = false;
           keys!.d!.pressed = false;
           keys!.s!.pressed = false;
           keys!.a.pressed = true;
           lastKey = "a";
-          setTimeout(()=> {
+          setTimeout(() => {
             keys!.a!.pressed = false;
           }, touchBuffer);
-        }else {
+        } else {
           keys!.w!.pressed = false;
           keys!.a!.pressed = false;
           keys!.s!.pressed = false;
           keys!.d!.pressed = true;
           lastKey = "d";
-          setTimeout(()=> {
+          setTimeout(() => {
             keys!.d!.pressed = false;
           }, touchBuffer);
         }
       }
-    })
+    });
   }
   useEffect(() => {
     // initiallize
@@ -1054,9 +1061,9 @@ const Pacman: React.FC = () => {
       const windowHeight: number = window.innerHeight;
       const windowWidth: number = window.innerWidth;
       let adjustmentRatio: number;
-      if(windowWidth < gameWidth && windowHeight > gameHeight){
+      if (windowWidth < gameWidth && windowHeight > gameHeight) {
         adjustmentRatio = windowWidth / gameWidth;
-      } else if(windowWidth > gameWidth && windowHeight < gameHeight){
+      } else if (windowWidth > gameWidth && windowHeight < gameHeight) {
         adjustmentRatio = (windowHeight + 100) / gameHeight;
       } else {
         adjustmentRatio = 1;
@@ -1074,8 +1081,15 @@ const Pacman: React.FC = () => {
         <InGameScore score={score} />
         <canvas className="game mx-auto" ref={canvasRef}></canvas>
       </dialog>
-
     </div>
   );
+  // return (
+  //   <div className="flex justify-center flex-col overflow-hidden">
+  //     <dialog className="overflow-hidden h-screen w-full">
+  //       <InGameScore score={score} />
+  //       <canvas className="game mx-auto" ref={canvasRef}></canvas>
+  //     </dialog>
+  //   </div>
+  // );
 };
 export default Pacman;

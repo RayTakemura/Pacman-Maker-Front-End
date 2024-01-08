@@ -1,12 +1,17 @@
 // import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 // import SimpleCanvasExample from "./components/SimpleCanvasExample.tsx";
-import Pacman from "./components/Pacman";
+import MainMenu from "./components/MainMenu";
 function App() {
   return (
-    <>
-      <Pacman />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<MainMenu/>} />
+
+      </Routes>
+      
+    </BrowserRouter>
   );
 }
 

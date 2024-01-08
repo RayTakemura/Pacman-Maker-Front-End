@@ -8,7 +8,11 @@ import {
   GhostSpawn,
 } from "./pacmanClasses/index";
 import InGameScore from "./InGameScore";
-const Pacman: React.FC = () => {
+type pacProps = {
+  pacSpeed: number;
+  ghostSpeed: number;
+}
+const Pacman: React.FC<pacProps> = ({pacSpeed, ghostSpeed}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const [score, setScore] = useState<number>(0);
@@ -48,6 +52,7 @@ const Pacman: React.FC = () => {
         },
         velocity: { x: Ghost.speed, y: 0 },
         color: "red",
+        speed: ghostSpeed,
         ctx: canvasCtxRef.current,
       }),
       new Ghost({
@@ -60,6 +65,7 @@ const Pacman: React.FC = () => {
           y: -1,
         },
         color: "pink",
+        speed: ghostSpeed,
         ctx: canvasCtxRef.current,
       }),
       new Ghost({
@@ -72,6 +78,7 @@ const Pacman: React.FC = () => {
           y: -1,
         },
         color: "aqua",
+        speed: ghostSpeed,
         ctx: canvasCtxRef.current,
       }),
       new Ghost({
@@ -84,6 +91,7 @@ const Pacman: React.FC = () => {
           y: -1,
         },
         color: "orange",
+        speed: ghostSpeed,
         ctx: canvasCtxRef.current,
       }),
     );
@@ -96,6 +104,7 @@ const Pacman: React.FC = () => {
         x: 0,
         y: 0,
       },
+      speed: pacSpeed,
       ctx: canvasCtxRef.current,
     });
     function createImage(src: string) {
@@ -447,7 +456,8 @@ const Pacman: React.FC = () => {
       circle: Player | Ghost;
       rectangle: Boundary | GhostSpawn;
     }) {
-      const padding = Boundary.width / 2 - circle.radius - 1;
+      // const padding = Boundary.width / 2 - circle.radius - 1;
+      const padding = Math.round(Boundary.width / 2) - circle.radius - 1;
       return (
         circle.position.y - circle.radius + circle.velocity.y <=
           rectangle.position.y + rectangle.height + padding &&
@@ -488,6 +498,7 @@ const Pacman: React.FC = () => {
           const tempPlayer = new Player({
             position: player.position,
             velocity: { x: 0, y: -5 },
+            speed: pacSpeed,
             ctx: canvasCtxRef.current,
           });
           if (
@@ -499,7 +510,7 @@ const Pacman: React.FC = () => {
             player!.velocity!.y = 0;
             break;
           } else {
-            player!.velocity!.y = -5;
+            player!.velocity!.y = -Player.speed;
           }
         }
       } else if (keys.a.pressed && lastKey === "a") {
@@ -508,6 +519,7 @@ const Pacman: React.FC = () => {
           const tempPlayer = new Player({
             position: player.position,
             velocity: { x: -5, y: 0 },
+            speed: pacSpeed,
             ctx: canvasCtxRef.current,
           });
           if (
@@ -519,7 +531,7 @@ const Pacman: React.FC = () => {
             player!.velocity!.x = 0;
             break;
           } else {
-            player!.velocity!.x = -5;
+            player!.velocity!.x = -Player.speed;
           }
         }
       } else if (keys.s.pressed && lastKey === "s") {
@@ -528,6 +540,7 @@ const Pacman: React.FC = () => {
           const tempPlayer = new Player({
             position: player.position,
             velocity: { x: 0, y: 5 },
+            speed: pacSpeed,
             ctx: canvasCtxRef.current,
           });
           if (
@@ -539,7 +552,7 @@ const Pacman: React.FC = () => {
             player!.velocity!.y = 0;
             break;
           } else {
-            player!.velocity!.y = 5;
+            player!.velocity!.y = Player.speed;
           }
         }
       } else if (keys.d.pressed && lastKey === "d") {
@@ -548,6 +561,7 @@ const Pacman: React.FC = () => {
           const tempPlayer = new Player({
             position: player.position,
             velocity: { x: 5, y: 0 },
+            speed: pacSpeed,
             ctx: canvasCtxRef.current,
           });
           if (
@@ -559,7 +573,7 @@ const Pacman: React.FC = () => {
             player!.velocity!.x = 0;
             break;
           } else {
-            player!.velocity!.x = 5;
+            player!.velocity!.x = Player.speed;
           }
         }
       }
@@ -866,6 +880,7 @@ const Pacman: React.FC = () => {
             position: ghost.position,
             velocity: { x: Ghost.speed, y: 0 },
             color: ghost.color,
+            speed: ghostSpeed,
             ctx: canvasCtxRef.current,
           });
           if (

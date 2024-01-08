@@ -32,7 +32,7 @@ const MainMenu: React.FC = () => {
           </div>
         </>
       }
-      {playing && <Pacman />}
+      {playing && <Pacman pacSpeed={2.5} ghostSpeed={2.5}/>}
     </>
   );
 };

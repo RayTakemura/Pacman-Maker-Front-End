@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Pacman from "./Pacman"
 const Custom: React.FC = () => {
-  const [pacSpeed, setPacSpeed] = useState<number>(1);
+  const [pacSpeed, setPacSpeed] = useState<number>(3);
   const changePacSpeed = (newSpeed: number) => {
     setPacSpeed(newSpeed);
   };
-  const [ghostSpeed, setGhostSpeed] = useState<number>(1);
+  const [ghostSpeed, setGhostSpeed] = useState<number>(3);
   const changeGhostSpeed = (newSpeed: number) => {
     setGhostSpeed(newSpeed);
   };
@@ -64,7 +64,7 @@ const Custom: React.FC = () => {
       }
       {
         playing &&
-        <Pacman/>
+        <Pacman pacSpeed={pacSpeed === 3 ? 2.5 : pacSpeed} ghostSpeed={ghostSpeed === 3 ? 2.5 : ghostSpeed}/>
       }
     </>
   );

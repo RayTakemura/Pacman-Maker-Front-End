@@ -1112,7 +1112,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
     window.location.href.lastIndexOf("/") + 1,
   );
   return (
-    <div className="flex justify-center flex-col overflow-hidden">
+    <div className="game flex justify-center flex-col overflow-hidden">
       <dialog open className="bg-black overflow-hidden h-screen w-full">
         <InGameScore score={score} />
         <canvas className="game mx-auto" ref={canvasRef}></canvas>

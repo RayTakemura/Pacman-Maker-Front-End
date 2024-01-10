@@ -12,10 +12,16 @@ const MainMenu: React.FC = () => {
   const playGame = () => {
     setPlaying(true);
   };
+  const turnOffGame = () => {
+    console.log("turnoffGame")
+    setPlaying(false);
+  }
   // const testButton = () => {
   //   console.log("testing button");
   // };
       // <Outlet/>
+            // <div className="flex justify-center"><button className="border-4 py-2 rounded border-red-500 w-52 " onClick={playGame}>Just Play!</button></div>
+            // <div className="flex justify-center"><Link className="border-4 py-2 rounded border-red-500 w-52 text-center" to="default-game">Just Play!</Link></div>
   return (
     <>
       {
@@ -32,7 +38,7 @@ const MainMenu: React.FC = () => {
           </div>
         </>
       }
-      {playing && <Pacman pacSpeed={2.5} ghostSpeed={2.5}/>}
+      {playing && <Pacman pacSpeed={2.4} ghostSpeed={2.4} closeGame={() => {turnOffGame()}}/>}
     </>
   );
 };

@@ -14,6 +14,10 @@ const Custom: React.FC = () => {
   const playGame = () => {
     setPlaying(true);
   }
+  const turnOffGame = () => {
+    console.log("turnoffGame")
+    setPlaying(false);
+  }
   return (
     <>
       {
@@ -64,7 +68,8 @@ const Custom: React.FC = () => {
       }
       {
         playing &&
-        <Pacman pacSpeed={pacSpeed === 3 ? 2.5 : pacSpeed} ghostSpeed={ghostSpeed === 3 ? 2.5 : ghostSpeed}/>
+        <Pacman pacSpeed={pacSpeed === 3 ? 2.5 : pacSpeed} ghostSpeed={ghostSpeed === 3 ? 2.5 : ghostSpeed} closeGame={()=>{turnOffGame()}}/>
+        // <Pacman pacSpeed={2.4} ghostSpeed={2.4} closeGame={() => {turnOffGame()}}/>
       }
     </>
   );

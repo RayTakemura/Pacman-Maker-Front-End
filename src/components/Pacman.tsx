@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Boundary,
   Player,
@@ -8,15 +9,23 @@ import {
   GhostSpawn,
 } from "./pacmanClasses/index";
 import InGameScore from "./InGameScore";
-const PacmanCanvas: React.FC = () => {
+type pacProps = {
+  pacSpeed: number;
+  ghostSpeed: number;
+  closeGame: () => void;
+}
+const Pacman: React.FC<pacProps> = ({pacSpeed, ghostSpeed, closeGame}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const [score, setScore] = useState<number>(0);
-  function addScore(): void {
+  function addScore(newScore: number): void {
     setScore((prevScore) => {
-      return prevScore + 10;
+      return prevScore + newScore;
     });
   }
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [gameCleared, setGameCleared ] = useState<boolean>(false);
+
   function startGame() {
     let spawnEntrance: { x: number; y: number };
     // console.log("beginning startGame");
@@ -48,6 +57,7 @@ const PacmanCanvas: React.FC = () => {
         },
         velocity: { x: Ghost.speed, y: 0 },
         color: "red",
+        speed: ghostSpeed,
         ctx: canvasCtxRef.current,
       }),
       new Ghost({
@@ -60,6 +70,7 @@ const PacmanCanvas: React.FC = () => {
           y: -1,
         },
         color: "pink",
+        speed: ghostSpeed,
         ctx: canvasCtxRef.current,
       }),
       new Ghost({
@@ -72,6 +83,7 @@ const PacmanCanvas: React.FC = () => {
           y: -1,
         },
         color: "aqua",
+        speed: ghostSpeed,
         ctx: canvasCtxRef.current,
       }),
       new Ghost({
@@ -84,6 +96,7 @@ const PacmanCanvas: React.FC = () => {
           y: -1,
         },
         color: "orange",
+        speed: ghostSpeed,
         ctx: canvasCtxRef.current,
       }),
     );
@@ -96,6 +109,7 @@ const PacmanCanvas: React.FC = () => {
         x: 0,
         y: 0,
       },
+      speed: pacSpeed,
       ctx: canvasCtxRef.current,
     });
     function createImage(src: string) {
@@ -447,7 +461,8 @@ const PacmanCanvas: React.FC = () => {
       circle: Player | Ghost;
       rectangle: Boundary | GhostSpawn;
     }) {
-      const padding = Boundary.width / 2 - circle.radius - 1;
+      // const padding = Boundary.width / 2 - circle.radius - 1;
+      const padding = (Boundary.width / 2) - circle.radius - 1;
       return (
         circle.position.y - circle.radius + circle.velocity.y <=
           rectangle.position.y + rectangle.height + padding &&
@@ -472,8 +487,10 @@ const PacmanCanvas: React.FC = () => {
       aqua: 6,
       orange: 9,
     };
-    const timeoutObj : { [key: string]: number;} = {};
-    const blinkObj : { [key: string]: number;} = {};
+    const timeoutObj: { [key: string]: number } = {};
+    const blinkObj: { [key: string]: number } = {};
+    const blinkTimeoutObj: { [key: string]: number } = {};
+    let ghostScore: number = 200;
     function animate() {
       animationId = requestAnimationFrame(animate);
       // console.log(animationId);
@@ -486,6 +503,7 @@ const PacmanCanvas: React.FC = () => {
           const tempPlayer = new Player({
             position: player.position,
             velocity: { x: 0, y: -5 },
+            speed: pacSpeed,
             ctx: canvasCtxRef.current,
           });
           if (
@@ -497,7 +515,7 @@ const PacmanCanvas: React.FC = () => {
             player!.velocity!.y = 0;
             break;
           } else {
-            player!.velocity!.y = -5;
+            player!.velocity!.y = -Player.speed;
           }
         }
       } else if (keys.a.pressed && lastKey === "a") {
@@ -506,6 +524,7 @@ const PacmanCanvas: React.FC = () => {
           const tempPlayer = new Player({
             position: player.position,
             velocity: { x: -5, y: 0 },
+            speed: pacSpeed,
             ctx: canvasCtxRef.current,
           });
           if (
@@ -517,7 +536,7 @@ const PacmanCanvas: React.FC = () => {
             player!.velocity!.x = 0;
             break;
           } else {
-            player!.velocity!.x = -5;
+            player!.velocity!.x = -Player.speed;
           }
         }
       } else if (keys.s.pressed && lastKey === "s") {
@@ -526,6 +545,7 @@ const PacmanCanvas: React.FC = () => {
           const tempPlayer = new Player({
             position: player.position,
             velocity: { x: 0, y: 5 },
+            speed: pacSpeed,
             ctx: canvasCtxRef.current,
           });
           if (
@@ -537,7 +557,7 @@ const PacmanCanvas: React.FC = () => {
             player!.velocity!.y = 0;
             break;
           } else {
-            player!.velocity!.y = 5;
+            player!.velocity!.y = Player.speed;
           }
         }
       } else if (keys.d.pressed && lastKey === "d") {
@@ -546,6 +566,7 @@ const PacmanCanvas: React.FC = () => {
           const tempPlayer = new Player({
             position: player.position,
             velocity: { x: 5, y: 0 },
+            speed: pacSpeed,
             ctx: canvasCtxRef.current,
           });
           if (
@@ -557,7 +578,7 @@ const PacmanCanvas: React.FC = () => {
             player!.velocity!.x = 0;
             break;
           } else {
-            player!.velocity!.x = 5;
+            player!.velocity!.x = Player.speed;
           }
         }
       }
@@ -576,19 +597,23 @@ const PacmanCanvas: React.FC = () => {
           // else just settimeout
           powerUps.splice(i, 1);
           ghosts.forEach((ghost) => {
+            ghost.blink = false;
             ghost.scared = true;
             clearTimeout(timeoutObj[ghost.color]);
             timeoutObj[ghost.color] = 0;
             timeoutObj[ghost.color] = setTimeout(() => {
+              ghostScore = 200;
               ghost.scared = false;
-            }, 10E3);
+            }, 10e3);
             clearInterval(blinkObj[ghost.color]);
-            setTimeout(() => {
+            blinkObj[ghost.color] = 0;
+            clearTimeout(blinkTimeoutObj[ghost.color]);
+            blinkTimeoutObj[ghost.color] = 0;
+            blinkTimeoutObj[ghost.color] = setTimeout(() => {
               blinkObj[ghost.color] = setInterval(() => {
                 ghost.blink = !ghost.blink;
-              }, 5E2)
-            }, 5E3);
-
+              }, 5e2);
+            }, 5e3);
           });
         }
       }
@@ -601,7 +626,15 @@ const PacmanCanvas: React.FC = () => {
           player!.velocity!.y = 0;
         }
       });
-
+      // reset the ghost score counter if player ate all the ghosts
+      if (
+        !ghosts[0].scared &&
+        !ghosts[1].scared &&
+        !ghosts[2].scared &&
+        !ghosts[3].scared
+      ) {
+        ghostScore = 200;
+      }
       for (let i = ghosts.length - 1; i >= 0; i--) {
         const ghost = ghosts[i];
         if (
@@ -614,7 +647,20 @@ const PacmanCanvas: React.FC = () => {
           if (ghost.scared) {
             // const g = ghosts.splice(i, 1)[0];
             cancelAnimationFrame(animationId);
+            ghost.invisible = true;
+            // write the score
+            canvasCtxRef!.current!.font = "20px Arial";
+            canvasCtxRef!.current!.textAlign = "center";
+            canvasCtxRef!.current!.fillStyle = "cyan";
+            canvasCtxRef!.current!.fillText(
+              `${ghostScore}`,
+              ghost.position.x,
+              ghost.position.y,
+            );
+            addScore(ghostScore);
+            ghostScore = ghostScore * 2;
             setTimeout(() => {
+              ghost.invisible = false;
               ghost.velocity = { x: 0, y: 0 };
               switch (ghost.color) {
                 case "red":
@@ -660,6 +706,9 @@ const PacmanCanvas: React.FC = () => {
             }, 500);
           } else {
             cancelAnimationFrame(animationId);
+
+            setGameOver(true);
+
             console.log("you lose");
           }
         }
@@ -668,6 +717,7 @@ const PacmanCanvas: React.FC = () => {
       // win condition
       if (pellets.length === 0 && powerUps.length === 0) {
         cancelAnimationFrame(animationId);
+        setGameCleared(true);
         console.log("you win!");
       }
 
@@ -684,7 +734,7 @@ const PacmanCanvas: React.FC = () => {
         ) {
           console.log("touching");
           pellets.splice(i, 1);
-          addScore();
+          addScore(10);
         }
       }
       player.update();
@@ -839,6 +889,7 @@ const PacmanCanvas: React.FC = () => {
             position: ghost.position,
             velocity: { x: Ghost.speed, y: 0 },
             color: ghost.color,
+            speed: ghostSpeed,
             ctx: canvasCtxRef.current,
           });
           if (
@@ -966,22 +1017,131 @@ const PacmanCanvas: React.FC = () => {
           break;
       }
     });
+    const touchStart = { x: 0, y: 0 };
+    const touchEnd = { x: 0, y: 0 };
+    const touchBuffer: number = 200;
+    addEventListener("touchstart", (e) => {
+      console.log(e);
+      touchStart.x = e.changedTouches[0].screenX;
+      touchStart.y = e.changedTouches[0].screenY;
+    });
+    addEventListener("touchend", (e) => {
+      console.log(e);
+      touchEnd.x = e.changedTouches[0].screenX;
+      touchEnd.y = e.changedTouches[0].screenY;
+      const xDiff: number = touchStart.x - touchEnd.x;
+      const yDiff: number = touchStart.y - touchEnd.y;
+      console.log(keys);
+      if (Math.abs(xDiff) < Math.abs(yDiff)) {
+        if (yDiff > 0) {
+          keys!.a!.pressed = false;
+          keys!.s!.pressed = false;
+          keys!.d!.pressed = false;
+          keys!.w!.pressed = true;
+          lastKey = "w";
+          setTimeout(() => {
+            keys!.w!.pressed = false;
+          }, touchBuffer);
+        } else {
+          keys!.w!.pressed = false;
+          keys!.a!.pressed = false;
+          keys!.d!.pressed = false;
+          keys!.s!.pressed = true;
+          lastKey = "s";
+          setTimeout(() => {
+            keys!.s!.pressed = false;
+          }, touchBuffer);
+        }
+      } else if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff > 0) {
+          keys!.w!.pressed = false;
+          keys!.d!.pressed = false;
+          keys!.s!.pressed = false;
+          keys!.a.pressed = true;
+          lastKey = "a";
+          setTimeout(() => {
+            keys!.a!.pressed = false;
+          }, touchBuffer);
+        } else {
+          keys!.w!.pressed = false;
+          keys!.a!.pressed = false;
+          keys!.s!.pressed = false;
+          keys!.d!.pressed = true;
+          lastKey = "d";
+          setTimeout(() => {
+            keys!.d!.pressed = false;
+          }, touchBuffer);
+        }
+      }
+    });
   }
   useEffect(() => {
     // initiallize
     if (canvasRef.current) {
       const can = canvasRef.current;
-      can!.height = 14 * Boundary.height;
-      can!.width = 11 * Boundary.width;
+
+      const gameHeight: number = 14 * Boundary.height;
+      const gameWidth: number = 11 * Boundary.width;
+      const windowHeight: number = window.innerHeight;
+      const windowWidth: number = window.innerWidth;
+      let adjustmentRatio: number;
+      if (windowWidth < gameWidth && windowHeight > gameHeight) {
+        adjustmentRatio = windowWidth / gameWidth;
+      } else if (windowWidth > gameWidth && windowHeight < gameHeight) {
+        adjustmentRatio = (windowHeight + 100) / gameHeight;
+      } else {
+        adjustmentRatio = 1;
+      }
+      can!.height = gameHeight;
+      can!.width = gameWidth;
       canvasCtxRef.current = can.getContext("2d");
+      canvasCtxRef.current!.scale(adjustmentRatio, adjustmentRatio);
       startGame();
     }
   }, []);
+  const restartGame = () : undefined => {
+    setGameCleared(false);
+    setGameOver(false);
+    startGame();
+  }
+  const emitClose = () => {
+    console.log("emitClose")
+    closeGame();
+  }
+  const endpoint =  window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
   return (
-    <div className="flex justify-center flex-col">
-      <InGameScore score={score} />
-      <canvas className="game mx-auto" ref={canvasRef}></canvas>
+    <div className="flex justify-center flex-col overflow-hidden">
+      <dialog open className="overflow-hidden h-screen w-full">
+        <InGameScore score={score} />
+        <canvas className="game mx-auto" ref={canvasRef}></canvas>
+      </dialog>
+      {
+        (gameOver || gameCleared) && 
+        <>
+        <dialog open className="p-8 border-4 border-blue">
+          <div className="text-center">
+            {gameOver ? 'You Lose!' : 'You Win!'}
+          </div>
+
+          <div className="flex flex-row justify-center gap-x-5">
+            <div className="flex justify-center"><button className="border-4 py-2 rounded border-red-500 w-52 " onClick={() => {restartGame()}}>Play Again!</button></div>
+            {
+              endpoint === 'custom' ? <div className="flex justify-center"><Link className="border-4 py-2 rounded border-ghost-pink w-52 text-center" to="/" >Main Menu</Link></div>
+              : <div className="flex justify-center"><button className="border-4 py-2 rounded border-ghost-pink w-52 " onClick={() => {emitClose()}}>Main Menu</button></div>
+            }
+          </div>
+        </dialog>
+        </>
+      }
     </div>
   );
+  // return (
+  //   <div className="flex justify-center flex-col overflow-hidden">
+  //     <dialog className="overflow-hidden h-screen w-full">
+  //       <InGameScore score={score} />
+  //       <canvas className="game mx-auto" ref={canvasRef}></canvas>
+  //     </dialog>
+  //   </div>
+  // );
 };
-export default PacmanCanvas;
+export default Pacman;

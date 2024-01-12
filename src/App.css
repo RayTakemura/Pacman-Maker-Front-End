@@ -4,3 +4,11 @@
 #root {
   width: 100%;
 }
+/* input[type="range"]::-webkit-slider-thumb { */
+/*   -webkit-appearance: none; */
+/*   appearance: none; */
+/*   width: 23px; */
+/*   height: 24px; */
+/*   border: 0; */
+/*   background: url("/public/img/Pacman.png"); */
+/* } */

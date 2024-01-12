@@ -5,15 +5,18 @@ export class Player {
   radians: number;
   openRate: number;
   rotation: number;
+  static speed: number;
   c: CanvasRenderingContext2D | null;
 
   constructor({
     position,
     velocity,
+    speed,
     ctx,
   }: {
     position: { x: number; y: number };
     velocity: { x: number; y: number };
+    speed: number;
     ctx: CanvasRenderingContext2D | null;
   }) {
     this.position = position;
@@ -21,6 +24,7 @@ export class Player {
     this.radius = 15;
     this.radians = 0.75;
     this.openRate = 0.12;
+    Player.speed = speed;
     this.rotation = 0;
     this.c = ctx;
   }

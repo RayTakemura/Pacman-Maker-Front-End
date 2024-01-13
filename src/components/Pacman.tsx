@@ -112,7 +112,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
           x: Boundary.width * 5 + Boundary.width / 2,
           y: Boundary.height * 5 + Boundary.height / 2,
         },
-        velocity: { x: Ghost.speed, y: 0 },
+        velocity: { x: ghostSpeed, y: 0 },
         color: "red",
         speed: ghostSpeed,
         ghostImages: ghostImages,
@@ -661,9 +661,33 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
           ghosts.forEach((ghost) => {
             ghost.blink = false;
             ghost.scared = true;
+            // if(ghostSpeed === 1) {
+            //   ghost.speed = 0.7; 
+            // }else {
+            //   ghost.speed = ghostSpeed - 1;
+            // }
+            // if(ghost.velocity.x < 0){
+            //   ghost.velocity.x = -ghost.speed
+            // } else if (ghost.velocity.x > 0){
+            //   ghost.velocity.x = ghost.speed
+            // } else if (ghost.velocity.y < 0){
+            //   ghost.velocity.y = -ghost.speed;
+            // } else {
+            //   ghost.velocity.y = ghost.speed;
+            // }
             clearTimeout(timeoutObj[ghost.color]);
             timeoutObj[ghost.color] = 0;
             timeoutObj[ghost.color] = setTimeout(() => {
+              // ghost.speed = ghostSpeed;
+              // if(ghost.velocity.x < 0){
+              //   ghost.velocity.x = -ghost.speed
+              // } else if (ghost.velocity.x > 0){
+              //   ghost.velocity.x = ghost.speed
+              // } else if (ghost.velocity.y < 0){
+              //   ghost.velocity.y = -ghost.speed;
+              // } else {
+              //   ghost.velocity.y = ghost.speed;
+              // }
               ghostScore = 200;
               ghost.scared = false;
             }, 10e3);
@@ -760,7 +784,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
 
                 default:
                   ghost.position = { ...spawnEntrance };
-                  ghost.velocity = { x: Ghost.speed, y: 0 };
+                  ghost.velocity = { x: ghostSpeed, y: 0 };
                   break;
               }
               ghost.scared = false;
@@ -823,7 +847,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         ) {
           ghost.position = { ...spawnEntrance };
           ghost.velocity = {
-            x: Ghost.speed,
+            x: ghost.speed,
             y: 0,
           };
           ghostLaps.red++;
@@ -848,7 +872,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         ) {
           ghost.position = { ...spawnEntrance };
           ghost.velocity = {
-            x: Ghost.speed,
+            x: ghost.speed,
             y: 0,
           };
           ghostLaps.pink++;
@@ -881,7 +905,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         ) {
           ghost.velocity = {
             x: 0,
-            y: -Ghost.speed,
+            y: -ghost.speed,
           };
         }
         if (
@@ -892,7 +916,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         ) {
           ghost.position = { ...spawnEntrance };
           ghost.velocity = {
-            x: Ghost.speed,
+            x: ghost.speed,
             y: 0,
           };
           ghostLaps.aqua++;
@@ -928,7 +952,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         ) {
           ghost.velocity = {
             x: 0,
-            y: -Ghost.speed,
+            y: -ghost.speed,
           };
         }
         if (
@@ -939,7 +963,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         ) {
           ghost.position = { ...spawnEntrance };
           ghost.velocity = {
-            x: Ghost.speed,
+            x: ghost.speed,
             y: 0,
           };
           ghostLaps.orange++;
@@ -949,7 +973,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
           boundary.draw();
           const tempGhost = new Ghost({
             position: ghost.position,
-            velocity: { x: Ghost.speed, y: 0 },
+            velocity: { x: ghost.speed, y: 0 },
             color: ghost.color,
             speed: ghostSpeed,
             ghostImages: ghostImages,
@@ -964,7 +988,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
           ) {
             collisions.push("right");
           }
-          tempGhost.velocity = { x: -Ghost.speed, y: 0 };
+          tempGhost.velocity = { x: -ghost.speed, y: 0 };
           if (
             !collisions.includes("left") &&
             circleCollidesWithRectangle({
@@ -974,7 +998,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
           ) {
             collisions.push("left");
           }
-          tempGhost.velocity = { x: 0, y: -Ghost.speed };
+          tempGhost.velocity = { x: 0, y: -ghost.speed };
           if (
             !collisions.includes("up") &&
             circleCollidesWithRectangle({
@@ -984,7 +1008,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
           ) {
             collisions.push("up");
           }
-          tempGhost.velocity = { x: 0, y: Ghost.speed };
+          tempGhost.velocity = { x: 0, y: ghost.speed };
           if (
             !collisions.includes("down") &&
             circleCollidesWithRectangle({
@@ -1016,20 +1040,20 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
           // console.log(direction);
           switch (direction) {
             case "down":
-              ghost.velocity.y = Ghost.speed;
+              ghost.velocity.y = ghost.speed;
               ghost.velocity.x = 0;
               break;
             case "up":
-              ghost.velocity.y = -Ghost.speed;
+              ghost.velocity.y = -ghost.speed;
               ghost.velocity.x = 0;
               break;
             case "left":
               ghost.velocity.y = 0;
-              ghost.velocity.x = -Ghost.speed;
+              ghost.velocity.x = -ghost.speed;
               break;
             case "right":
               ghost.velocity.y = 0;
-              ghost.velocity.x = Ghost.speed;
+              ghost.velocity.x = ghost.speed;
               break;
           }
           ghost.prevCollisions = Array<string>();
@@ -1043,9 +1067,12 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
 
     animate();
     addEventListener("keydown", ({ key }) => {
-      // console.log("keydown", key);
       switch (key) {
         case "w":
+          keys!.w!.pressed = true;
+          lastKey = "w";
+          break;
+        case "ArrowUp":
           keys!.w!.pressed = true;
           lastKey = "w";
           break;
@@ -1053,11 +1080,23 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
           keys!.a!.pressed = true;
           lastKey = "a";
           break;
+        case "ArrowLeft":
+          keys!.a!.pressed = true;
+          lastKey = "a";
+          break;
         case "s":
           keys!.s!.pressed = true;
           lastKey = "s";
           break;
+        case "ArrowDown":
+          keys!.s!.pressed = true;
+          lastKey = "s";
+          break;
         case "d":
+          keys!.d!.pressed = true;
+          lastKey = "d";
+          break;
+        case "ArrowRight":
           keys!.d!.pressed = true;
           lastKey = "d";
           break;
@@ -1069,13 +1108,25 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         case "w":
           keys!.w!.pressed = false;
           break;
+        case "ArrowUp":
+          keys!.w!.pressed = false;
+          break;
         case "a":
+          keys!.a!.pressed = false;
+          break;
+        case "ArrowLeft":
           keys!.a!.pressed = false;
           break;
         case "s":
           keys!.s!.pressed = false;
           break;
+        case "ArrowDown":
+          keys!.s!.pressed = false;
+          break;
         case "d":
+          keys!.d!.pressed = false;
+          break;
+        case "ArrowRight":
           keys!.d!.pressed = false;
           break;
       }
@@ -1182,7 +1233,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
       </dialog>
       {(gameOver || gameCleared) && (
         <>
-          <dialog open className="bg-black p-8 border-4 border-blue">
+          <dialog open className="text-white bg-black p-8 border-4 border-blue">
             <div className="text-center">
               {gameOver ? "You Lose!" : "You Win!"}
             </div>

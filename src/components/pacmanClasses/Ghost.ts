@@ -9,26 +9,27 @@ export class Ghost {
   scared: boolean;
   blink: boolean = false;
   invisible: boolean = false;
-  ghostImages: {
-    redUp: HTMLImageElement;
-    redRight: HTMLImageElement;
-    redDown: HTMLImageElement;
-    redLeft: HTMLImageElement;
-    pinkUp: HTMLImageElement;
-    pinkRight: HTMLImageElement;
-    pinkDown: HTMLImageElement;
-    pinkLeft: HTMLImageElement;
-    aquaUp: HTMLImageElement;
-    aquaRight: HTMLImageElement;
-    aquaDown: HTMLImageElement;
-    aquaLeft: HTMLImageElement;
-    orangeUp: HTMLImageElement;
-    orangeRight: HTMLImageElement;
-    orangeDown: HTMLImageElement;
-    orangeLeft: HTMLImageElement;
-    blink: HTMLImageElement;
-    scared: HTMLImageElement;
-  };
+  ghostImages: { [key: string]: HTMLImageElement } = {};
+  // ghostImages: {
+  //   redUp: HTMLImageElement;
+  //   redRight: HTMLImageElement;
+  //   redDown: HTMLImageElement;
+  //   redLeft: HTMLImageElement;
+  //   pinkUp: HTMLImageElement;
+  //   pinkRight: HTMLImageElement;
+  //   pinkDown: HTMLImageElement;
+  //   pinkLeft: HTMLImageElement;
+  //   aquaUp: HTMLImageElement;
+  //   aquaRight: HTMLImageElement;
+  //   aquaDown: HTMLImageElement;
+  //   aquaLeft: HTMLImageElement;
+  //   orangeUp: HTMLImageElement;
+  //   orangeRight: HTMLImageElement;
+  //   orangeDown: HTMLImageElement;
+  //   orangeLeft: HTMLImageElement;
+  //   blink: HTMLImageElement;
+  //   scared: HTMLImageElement;
+  // };
   // redUp: HTMLImageElement;
   // redRight: HTMLImageElement;
   // redDown: HTMLImageElement;
@@ -59,6 +60,7 @@ export class Ghost {
     velocity: { x: number; y: number };
     color: string;
     speed: number;
+    ghostImages: { [key: string]: HTMLImageElement };
     ctx: CanvasRenderingContext2D | null;
   }) {
     this.position = position;

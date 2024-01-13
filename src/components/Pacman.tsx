@@ -26,26 +26,27 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [gameCleared, setGameCleared] = useState<boolean>(false);
 
-  const ghostImages = {
-    redUp: HTMLImageElement,
-    redRight: HTMLImageElement,
-    redDown: HTMLImageElement,
-    redLeft: HTMLImageElement,
-    pinkUp: HTMLImageElement,
-    pinkRight: HTMLImageElement,
-    pinkDown: HTMLImageElement,
-    pinkLeft: HTMLImageElement,
-    aquaUp: HTMLImageElement,
-    aquaRight: HTMLImageElement,
-    aquaDown: HTMLImageElement,
-    aquaLeft: HTMLImageElement,
-    orangeUp: HTMLImageElement,
-    orangeRight: HTMLImageElement,
-    orangeDown: HTMLImageElement,
-    orangeLeft: HTMLImageElement,
-    blink: HTMLImageElement,
-    scared: HTMLImageElement,
-  };
+  // const ghostImages = {
+  //   redUp: HTMLImageElement,
+  //   redRight: HTMLImageElement,
+  //   redDown: HTMLImageElement,
+  //   redLeft: HTMLImageElement,
+  //   pinkUp: HTMLImageElement,
+  //   pinkRight: HTMLImageElement,
+  //   pinkDown: HTMLImageElement,
+  //   pinkLeft: HTMLImageElement,
+  //   aquaUp: HTMLImageElement,
+  //   aquaRight: HTMLImageElement,
+  //   aquaDown: HTMLImageElement,
+  //   aquaLeft: HTMLImageElement,
+  //   orangeUp: HTMLImageElement,
+  //   orangeRight: HTMLImageElement,
+  //   orangeDown: HTMLImageElement,
+  //   orangeLeft: HTMLImageElement,
+  //   blink: HTMLImageElement,
+  //   scared: HTMLImageElement,
+  // };
+  const ghostImages: { [key: string]: HTMLImageElement } = {};
   ghostImages.redUp = new Image();
   ghostImages.redUp.src = "/img/redGhostUp.png";
   ghostImages.redRight = new Image();

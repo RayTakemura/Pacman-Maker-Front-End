@@ -61,3 +61,6 @@ a {
   background: url("/img/redGhostRight.png");
   background-size: 38px 38px;
 }
+div.game {
+  touch-action: none;
+}

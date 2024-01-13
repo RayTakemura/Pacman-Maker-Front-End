@@ -13,8 +13,8 @@ type pacProps = {
   pacSpeed: number;
   ghostSpeed: number;
   closeGame: () => void;
-}
-const Pacman: React.FC<pacProps> = ({pacSpeed, ghostSpeed, closeGame}) => {
+};
+const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const [score, setScore] = useState<number>(0);
@@ -24,7 +24,7 @@ const Pacman: React.FC<pacProps> = ({pacSpeed, ghostSpeed, closeGame}) => {
     });
   }
   const [gameOver, setGameOver] = useState<boolean>(false);
-  const [gameCleared, setGameCleared ] = useState<boolean>(false);
+  const [gameCleared, setGameCleared] = useState<boolean>(false);
 
   function startGame() {
     let spawnEntrance: { x: number; y: number };
@@ -462,7 +462,7 @@ const Pacman: React.FC<pacProps> = ({pacSpeed, ghostSpeed, closeGame}) => {
       rectangle: Boundary | GhostSpawn;
     }) {
       // const padding = Boundary.width / 2 - circle.radius - 1;
-      const padding = (Boundary.width / 2) - circle.radius - 1;
+      const padding = Boundary.width / 2 - circle.radius - 2;
       return (
         circle.position.y - circle.radius + circle.velocity.y <=
           rectangle.position.y + rectangle.height + padding &&
@@ -1099,40 +1099,67 @@ const Pacman: React.FC<pacProps> = ({pacSpeed, ghostSpeed, closeGame}) => {
       startGame();
     }
   }, []);
-  const restartGame = () : undefined => {
+  const restartGame = (): undefined => {
     setGameCleared(false);
     setGameOver(false);
     startGame();
-  }
+  };
   const emitClose = () => {
-    console.log("emitClose")
+    console.log("emitClose");
     closeGame();
-  }
-  const endpoint =  window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+  };
+  const endpoint = window.location.href.substring(
+    window.location.href.lastIndexOf("/") + 1,
+  );
   return (
-    <div className="flex justify-center flex-col overflow-hidden">
-      <dialog open className="overflow-hidden h-screen w-full">
+    <div className="game flex justify-center flex-col overflow-hidden">
+      <dialog open className="bg-black overflow-hidden h-screen w-full">
         <InGameScore score={score} />
         <canvas className="game mx-auto" ref={canvasRef}></canvas>
       </dialog>
-      {
-        (gameOver || gameCleared) && 
+      {(gameOver || gameCleared) && (
         <>
-        <dialog open className="p-8 border-4 border-blue">
-          <div className="text-center">
-            {gameOver ? 'You Lose!' : 'You Win!'}
-          </div>
+          <dialog open className="bg-black p-8 border-4 border-blue">
+            <div className="text-center">
+              {gameOver ? "You Lose!" : "You Win!"}
+            </div>
 
-          <div className="flex flex-row justify-center gap-x-5">
-            <div className="flex justify-center"><button className="border-4 py-2 rounded border-red-500 w-52 " onClick={() => {restartGame()}}>Play Again!</button></div>
-            {
-              endpoint === 'custom' ? <div className="flex justify-center"><Link className="border-4 py-2 rounded border-ghost-pink w-52 text-center" to="/" >Main Menu</Link></div>
-              : <div className="flex justify-center"><button className="border-4 py-2 rounded border-ghost-pink w-52 " onClick={() => {emitClose()}}>Main Menu</button></div>
-            }
-          </div>
-        </dialog>
+            <div className="flex flex-row justify-center gap-x-5">
+              <div className="flex justify-center">
+                <button
+                  className="border-4 py-2 rounded border-red-500 w-52 "
+                  onClick={() => {
+                    restartGame();
+                  }}
+                >
+                  Play Again!
+                </button>
+              </div>
+              {endpoint === "custom" ? (
+                <div className="flex justify-center">
+                  <Link
+                    className="border-4 py-2 rounded border-ghost-pink w-52 text-center"
+                    to="/"
+                  >
+                    Main Menu
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex justify-center">
+                  <button
+                    className="border-4 py-2 rounded border-ghost-pink w-52 "
+                    onClick={() => {
+                      emitClose();
+                    }}
+                  >
+                    Main Menu
+                  </button>
+                </div>
+              )}
+            </div>
+          </dialog>
         </>
-      }
+      )}
     </div>
   );
   // return (

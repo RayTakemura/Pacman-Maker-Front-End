@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Pacman from "./Pacman"
+import Pacman from "./Pacman";
 const Custom: React.FC = () => {
   const [pacSpeed, setPacSpeed] = useState<number>(3);
   const changePacSpeed = (newSpeed: number) => {
@@ -13,18 +13,22 @@ const Custom: React.FC = () => {
   const [playing, setPlaying] = useState<boolean>(false);
   const playGame = () => {
     setPlaying(true);
-  }
+  };
   const turnOffGame = () => {
-    console.log("turnoffGame")
+    console.log("turnoffGame");
     setPlaying(false);
-  }
+  };
   return (
     <>
-      {
-        !playing && 
+      {!playing && (
         <div className="flex flex-col gap-y-5">
           <div className="w-96 self-center pb-7">
-            <Link className="border-4 border-blue p-3 text-2xl font-extrabold" to="/">Back</Link>
+            <Link
+              className="border-4 border-blue p-3 text-2xl font-extrabold"
+              to="/"
+            >
+              Back
+            </Link>
           </div>
           <h2 className="text-center text-4xl pb-36">Custom Game</h2>
           <div>
@@ -62,15 +66,24 @@ const Custom: React.FC = () => {
             </div>
           </div>
           <div className="flex justify-center pt-5">
-            <button onClick={playGame} className="border-4 py-2 rounded border-red-500 w-52">Start!</button>
+            <button
+              onClick={playGame}
+              className="border-4 py-2 rounded border-red-500 w-52"
+            >
+              Start!
+            </button>
           </div>
         </div>
-      }
-      {
-        playing &&
-        <Pacman pacSpeed={pacSpeed === 3 ? 2.5 : pacSpeed} ghostSpeed={ghostSpeed === 3 ? 2.5 : ghostSpeed} closeGame={()=>{turnOffGame()}}/>
-        // <Pacman pacSpeed={2.4} ghostSpeed={2.4} closeGame={() => {turnOffGame()}}/>
-      }
+      )}
+      {playing && (
+        <Pacman
+          pacSpeed={pacSpeed === 3 ? 2.5 : pacSpeed}
+          ghostSpeed={ghostSpeed === 3 ? 2.5 : ghostSpeed}
+          closeGame={() => {
+            turnOffGame();
+          }}
+        />
+      )}
     </>
   );
 };

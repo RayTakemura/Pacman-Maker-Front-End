@@ -4,7 +4,7 @@ export class Ghost {
   color: string;
   radius: number;
   prevCollisions = Array<string>();
-  static speed: number;
+  speed: number;
   static spawnSpeed = 1;
   scared: boolean;
   blink: boolean = false;
@@ -68,7 +68,7 @@ export class Ghost {
     this.color = color;
     this.radius = 15;
     this.prevCollisions = Array<string>();
-    Ghost.speed = speed;
+    this.speed = speed;
     this.ghostImages = ghostImages;
     // this.spawnSpeed = 1;
     this.scared = false;

@@ -4,7 +4,7 @@ type Props = {
 function InGameScore({ score }: Props) {
   return (
     <>
-      <p>
+      <p className="text-white">
         <span>Score: </span> <span>{score}</span>
       </p>
     </>

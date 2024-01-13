@@ -26,6 +26,63 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [gameCleared, setGameCleared] = useState<boolean>(false);
 
+  // const ghostImages = {
+  //   redUp: HTMLImageElement,
+  //   redRight: HTMLImageElement,
+  //   redDown: HTMLImageElement,
+  //   redLeft: HTMLImageElement,
+  //   pinkUp: HTMLImageElement,
+  //   pinkRight: HTMLImageElement,
+  //   pinkDown: HTMLImageElement,
+  //   pinkLeft: HTMLImageElement,
+  //   aquaUp: HTMLImageElement,
+  //   aquaRight: HTMLImageElement,
+  //   aquaDown: HTMLImageElement,
+  //   aquaLeft: HTMLImageElement,
+  //   orangeUp: HTMLImageElement,
+  //   orangeRight: HTMLImageElement,
+  //   orangeDown: HTMLImageElement,
+  //   orangeLeft: HTMLImageElement,
+  //   blink: HTMLImageElement,
+  //   scared: HTMLImageElement,
+  // };
+  const ghostImages: { [key: string]: HTMLImageElement } = {};
+  ghostImages.redUp = new Image();
+  ghostImages.redUp.src = "/img/redGhostUp.png";
+  ghostImages.redRight = new Image();
+  ghostImages.redRight.src = "/img/redGhostRight.png";
+  ghostImages.redDown = new Image();
+  ghostImages.redDown.src = "/img/redGhostDown.png";
+  ghostImages.redLeft = new Image();
+  ghostImages.redLeft.src = "/img/redGhostLeft.png";
+  ghostImages.pinkUp = new Image();
+  ghostImages.pinkUp.src = "/img/pinkGhostUp.png";
+  ghostImages.pinkRight = new Image();
+  ghostImages.pinkRight.src = "/img/pinkGhostRight.png";
+  ghostImages.pinkDown = new Image();
+  ghostImages.pinkDown.src = "/img/pinkGhostDown.png";
+  ghostImages.pinkLeft = new Image();
+  ghostImages.pinkLeft.src = "/img/pinkGhostLeft.png";
+  ghostImages.aquaUp = new Image();
+  ghostImages.aquaUp.src = "/img/aquaGhostUp.png";
+  ghostImages.aquaRight = new Image();
+  ghostImages.aquaRight.src = "/img/aquaGhostRight.png";
+  ghostImages.aquaDown = new Image();
+  ghostImages.aquaDown.src = "/img/aquaGhostDown.png";
+  ghostImages.aquaLeft = new Image();
+  ghostImages.aquaLeft.src = "/img/aquaGhostLeft.png";
+  ghostImages.orangeUp = new Image();
+  ghostImages.orangeUp.src = "/img/orangeGhostUp.png";
+  ghostImages.orangeRight = new Image();
+  ghostImages.orangeRight.src = "/img/orangeGhostRight.png";
+  ghostImages.orangeDown = new Image();
+  ghostImages.orangeDown.src = "/img/orangeGhostDown.png";
+  ghostImages.orangeLeft = new Image();
+  ghostImages.orangeLeft.src = "/img/orangeGhostLeft.png";
+  ghostImages.blink = new Image();
+  ghostImages.blink.src = "/img/ScaredGhostBlink.png";
+  ghostImages.scared = new Image();
+  ghostImages.scared.src = "/img/ScaredGhost.png";
   function startGame() {
     let spawnEntrance: { x: number; y: number };
     // console.log("beginning startGame");
@@ -58,6 +115,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         velocity: { x: Ghost.speed, y: 0 },
         color: "red",
         speed: ghostSpeed,
+        ghostImages: ghostImages,
         ctx: canvasCtxRef.current,
       }),
       new Ghost({
@@ -71,6 +129,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         },
         color: "pink",
         speed: ghostSpeed,
+        ghostImages: ghostImages,
         ctx: canvasCtxRef.current,
       }),
       new Ghost({
@@ -84,6 +143,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         },
         color: "aqua",
         speed: ghostSpeed,
+        ghostImages: ghostImages,
         ctx: canvasCtxRef.current,
       }),
       new Ghost({
@@ -97,6 +157,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
         },
         color: "orange",
         speed: ghostSpeed,
+        ghostImages: ghostImages,
         ctx: canvasCtxRef.current,
       }),
     );
@@ -461,8 +522,9 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
       circle: Player | Ghost;
       rectangle: Boundary | GhostSpawn;
     }) {
-      // const padding = Boundary.width / 2 - circle.radius - 1;
-      const padding = Boundary.width / 2 - circle.radius - 2;
+      // const padding = Boundary.width / 2 - circle.radius;
+      const padding = Boundary.width / 2 - circle.radius - 1;
+      // const padding = Boundary.width / 2 - circle.radius - 2;
       return (
         circle.position.y - circle.radius + circle.velocity.y <=
           rectangle.position.y + rectangle.height + padding &&
@@ -890,6 +952,7 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
             velocity: { x: Ghost.speed, y: 0 },
             color: ghost.color,
             speed: ghostSpeed,
+            ghostImages: ghostImages,
             ctx: canvasCtxRef.current,
           });
           if (

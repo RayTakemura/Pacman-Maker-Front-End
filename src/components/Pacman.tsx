@@ -667,13 +667,13 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
             //   ghost.speed = ghostSpeed - 1;
             // }
             // if(ghost.velocity.x < 0){
-            //   ghost.velocity.x = -ghost.speed
+            //   ghost.velocity.x = -ghost.speed * 0.8
             // } else if (ghost.velocity.x > 0){
-            //   ghost.velocity.x = ghost.speed
+            //   ghost.velocity.x = ghost.speed * 0.8
             // } else if (ghost.velocity.y < 0){
-            //   ghost.velocity.y = -ghost.speed;
+            //   ghost.velocity.y = -ghost.speed * 0.8;
             // } else {
-            //   ghost.velocity.y = ghost.speed;
+            //   ghost.velocity.y = ghost.speed * 0.8;
             // }
             clearTimeout(timeoutObj[ghost.color]);
             timeoutObj[ghost.color] = 0;

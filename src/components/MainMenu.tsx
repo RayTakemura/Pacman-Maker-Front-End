@@ -25,48 +25,50 @@ const MainMenu: React.FC = () => {
     <>
       {!playing && (
         <>
-          <div className="flex justify-center pb-36">
-            <h1 className="border-4 border-blue py-10 rounded text-center text-4xl w-96">
-              Pacman
-            </h1>
-          </div>
-          <div className="flex flex-col justify-center gap-y-5">
-            <div className="flex justify-center">
-              <button
-                className="border-4 py-2 rounded border-red-500 w-52 "
-                onClick={playGame}
-              >
-                Just Play!
-              </button>
+          <div className="h-svh">
+            <div className="flex justify-center pb-36">
+              <h1 className="border-4 border-blue py-10 rounded text-center text-4xl w-96">
+                Pacman
+              </h1>
             </div>
-            <div className="flex justify-center">
-              <Link
-                className="border-4 py-2 rounded border-ghost-pink w-52 text-center"
-                to="/custom"
-              >
-                Custom Game
-              </Link>
-            </div>
-            <div className="flex justify-center">
-              <button
-                className="border-4 py-2 rounded border-ghost-aqua w-52 "
-                onClick={() => { showHowToPlay(true) }}
-              >
-                How to Play
-              </button>
-            </div>
-            <div className="flex justify-center">
-              <a href="https://raytakemura.netlify.app/" target="_blank">
+            <div className="flex flex-col justify-center gap-y-5">
+              <div className="flex justify-center">
                 <button
-                  className="border-4 py-2 rounded border-ghost-orange w-52 "
+                  className="border-4 py-2 rounded border-red-500 w-52 "
+                  onClick={playGame}
                 >
-                  Author
+                  Just Play!
                 </button>
-              </a>
+              </div>
+              <div className="flex justify-center">
+                <Link
+                  className="border-4 py-2 rounded border-ghost-pink w-52 text-center"
+                  to="/custom"
+                >
+                  Custom Game
+                </Link>
+              </div>
+              <div className="flex justify-center">
+                <button
+                  className="border-4 py-2 rounded border-ghost-aqua w-52 "
+                  onClick={() => { showHowToPlay(true) }}
+                >
+                  How to Play
+                </button>
+              </div>
+              <div className="flex justify-center">
+                <a href="https://raytakemura.netlify.app/" target="_blank">
+                  <button
+                    className="border-4 py-2 rounded border-ghost-orange w-52 "
+                  >
+                    Author
+                  </button>
+                </a>
+              </div>
             </div>
-          </div>
-          <div className="absolute inset-x-0 bottom-0 text-center">
+            <div className="absolute inset-x-0 bottom-0 text-center">
               &copy; Ray Takemura
+            </div>
           </div>
         </>
       )}

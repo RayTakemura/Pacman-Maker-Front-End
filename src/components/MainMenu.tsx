@@ -26,12 +26,12 @@ const MainMenu: React.FC = () => {
       {!playing && (
         <>
           <div className="h-svh overflow-hidden">
-            <div className="flex justify-center pb-36">
+            <div className="flex justify-center pb-28 sm:pb-36">
               <h1 className="border-4 border-blue py-10 rounded text-center text-4xl w-96">
                 Pacman
               </h1>
             </div>
-            <div className="flex flex-col justify-center gap-y-5">
+            <div className="flex flex-col justify-center gap-y-2 sm:gap-y-5">
               <div className="flex justify-center">
                 <button
                   className="border-4 py-2 rounded border-red-500 w-52 "

@@ -1234,11 +1234,11 @@ const Pacman: React.FC<pacProps> = ({ pacSpeed, ghostSpeed, closeGame }) => {
       {(gameOver || gameCleared) && (
         <>
           <dialog open className="text-white bg-black p-8 border-4 border-blue">
-            <div className="text-center">
+            <div className="text-center mb-5">
               {gameOver ? "You Lose!" : "You Win!"}
             </div>
 
-            <div className="flex flex-row justify-center gap-x-5">
+            <div className="flex flex-col sm:flex-row justify-center gap-y-5 sm:gap-x-5">
               <div className="flex justify-center">
                 <button
                   className="border-4 py-2 rounded border-red-500 w-52 "

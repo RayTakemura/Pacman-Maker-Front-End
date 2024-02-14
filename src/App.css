@@ -3,6 +3,7 @@
 /* } */
 #root {
   width: 100%;
+  overflow: hidden;
 }
 /* input[type="range"]::-webkit-slider-thumb { */
 /*   -webkit-appearance: none; */

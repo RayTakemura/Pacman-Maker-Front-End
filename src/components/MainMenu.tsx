@@ -25,7 +25,7 @@ const MainMenu: React.FC = () => {
     <>
       {!playing && (
         <>
-          <div className="h-svh">
+          <div className="h-svh overflow-hidden">
             <div className="flex justify-center pb-36">
               <h1 className="border-4 border-blue py-10 rounded text-center text-4xl w-96">
                 Pacman
